@@ -25,6 +25,14 @@ import {
     SidebarTrigger,
     useSidebar,
 } from "@/components/ui/sidebar";
+import { ModeToggle } from "./mode-toggle";
+import { Separator } from "@/components/ui/separator";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // This is sample data.
 const data = {
@@ -156,8 +164,36 @@ const data = {
     ],
 };
 
+interface ModeToggleWithTooltipProps {
+    isCollapsed: boolean;
+}
+
+const ModeToggleWithTooltip: React.FC<ModeToggleWithTooltipProps> = ({
+    isCollapsed,
+}) => {
+    if (!isCollapsed) {
+        return <ModeToggle />;
+    }
+
+    return (
+        <TooltipProvider delayDuration={50}>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <span className="inline-block">
+                        <ModeToggle />
+                    </span>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                    <p>Toggle theme</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    );
+};
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { state } = useSidebar();
+
     return (
         <Sidebar
             collapsible="icon"
@@ -169,13 +205,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         src="./scd"
                         alt="Logo"
                     />
-                ) : (
-                    ""
-                )}
-                <SidebarTrigger className="bg-primary text-white hover:bg-cyan-800 hover:text-white">
-                    {state === 'collapsed' ? <SquareChevronRight /> : <SquareChevronLeft />}
-                </SidebarTrigger>
+                ) : null}
+                <div
+                    className={`flex gap-2 ${
+                        state === "collapsed"
+                            ? "flex-col-reverse"
+                            : "justify-between"
+                    }`}
+                >
+                    <ModeToggleWithTooltip isCollapsed={state === "collapsed"} />
+                    <SidebarTrigger className="bg-primary text-white hover:bg-cyan-800 hover:text-white">
+                        {state === "collapsed" ? (
+                            <SquareChevronRight />
+                        ) : (
+                            <SquareChevronLeft />
+                        )}
+                    </SidebarTrigger>
+                </div>
             </SidebarHeader>
+
+            {/* Separator widoczny tylko, gdy sidebar jest collapsed */}
+            {state === "collapsed" && <Separator className="my-2" />}
+
             <SidebarContent>
                 <NavMain items={data.navMain} />
                 <NavProjects projects={data.projects} />
