@@ -1,25 +1,36 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 
 const QuizPage = () => {
+    const { isMobile } = useSidebar();
     return (
         <>
-            <div className="absolute bg-primary-light h-screen w-2/4 -z-10 max-md:w-screen max-md:h-2/5"></div>
-            <div className="flex h-screen max-w-screen-2xl m-auto max-md:flex-col">
-                <div className="flex justify-between flex-col flex-1 p-14 max-md:flex-[2] max-md:p-10">
-                    <div className="flex items-center opacity-70">
-                        <ArrowLeft className="h-3 w-3 text-primary mr-2" />
-                        <p className="underline text-primary text-xs font-bold">
-                            Return
-                        </p>
+            <div className="absolute bg-primary-light h-screen w-1/2 max-lg:w-full -z-10  max-lg:h-2/5"></div>
+            <div className="flex h-screen max-w-screen-2xl m-auto max-lg:flex-col">
+                <div className="flex justify-between flex-col flex-1 p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[2] ">
+                    <div className="flex justify-between">
+                        <div className="flex items-center opacity-70 cursor-pointer p-2 group hover:opacity-80">
+                            <ArrowLeft className="h-3.5 w-3.5 text-primary mr-2 transition-transform group-hover:-translate-x-1" />
+                            <p className="underline text-xs font-bold text-primary">
+                                Return
+                            </p>
+                        </div>
+                        {isMobile ? (
+                            <SidebarTrigger>
+                                <Menu />
+                            </SidebarTrigger>
+                        ) : (
+                            ""
+                        )}
                     </div>
                     <div className="font-bold">
                         <p className="mb-4 text-xl text-primary-muted">
                             question 1/5
                         </p>
-                        <h2 className="text-4xl text-primary max-md:text-3xl max-md:mb-10">
+                        <h2 className="text-4xl text-primary max-lg:text-3xl max-lg:mb-10">
                             What is your goal? Granie w ligo lego panie kolego
                         </h2>
                         <p className="mt-2 text-primary-muted text-sm">
@@ -27,17 +38,16 @@ const QuizPage = () => {
                         </p>
                     </div>
                     <img
-                        className="max-md:hidden"
+                        className="max-lg:hidden"
                         src="./asd"
                         alt="Logo"
                     />
                 </div>
 
-                <div className="flex-1 flex flex-col h-screen p-14 max-md:flex-[3] max-md:p-10">
-                    <div className="flex-1 flex items-center justify-center max-md:hidden">
+                <div className="flex-1 flex flex-col h-screen p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[3]">
+                    <div className="flex-1 flex items-center justify-center max-lg:hidden">
                         <img
-     
-                            src="./asd"
+                            src="../question-image.png"
                             alt="Question image"
                         />
                     </div>
@@ -52,7 +62,7 @@ const QuizPage = () => {
                                     value="1"
                                     id="1"
                                 />
-                                <div className="flex items-center rounded-lg border m-auto border-primary-muted peer-data-[state=checked]:bg-primary-light peer-data-[state=checked]:border-primary max-w">
+                                <div className="flex items-center rounded-lg border m-auto border-primary-muted peer-data-[state=checked]:bg-primary-light peer-data-[state=checked]:border-primary">
                                     <Label
                                         htmlFor="1"
                                         className="cursor-pointer w-full  p-4 text-md"

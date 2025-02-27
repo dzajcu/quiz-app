@@ -1,9 +1,11 @@
-import QuizPage from "./components/QuizPage.tsx";
+import Page from "./pages/Page.tsx";
+import QuizPage from "./pages/QuizPage.tsx";
 
 function App() {
     return (
         <>
-            <QuizPage />
+            <Page><QuizPage/></Page>
+            
         </>
     );
 }
