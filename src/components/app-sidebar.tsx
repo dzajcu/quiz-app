@@ -214,7 +214,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     }`}
                 >
                     <ModeToggleWithTooltip isCollapsed={state === "collapsed"} />
-                    <SidebarTrigger className="bg-primary text-white hover:bg-cyan-800 hover:text-white">
+                    <SidebarTrigger className="bg-primary-button hover:bg-primary-button-hover text-white hover:text-white">
                         {state === "collapsed" ? (
                             <SquareChevronRight />
                         ) : (

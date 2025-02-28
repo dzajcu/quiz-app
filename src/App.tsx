@@ -1,5 +1,6 @@
-import Page from "./pages/Page.tsx";
-import QuizPage from "./pages/QuizPage.tsx";
+import SidebarWrapper from "./components/sidebar-wrapper.tsx";
+
+import QuizPage from "./pages/Quiz/QuizPage.tsx";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -15,9 +16,9 @@ function App() {
             defaultTheme={defaultTheme} // Ustawienie domyślnego motywu zgodnie z systemem
             storageKey="vite-ui-theme"
         >
-            <Page>
+            <SidebarWrapper>
                 <QuizPage />
-            </Page>
+            </SidebarWrapper>
         </ThemeProvider>
     );
 }

@@ -3,7 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { ReactNode } from "react";
 
-export default function Page({ children }: { children: ReactNode }) {
+export default function SidebarWrapper({ children }: { children: ReactNode }) {
     return (
         <SidebarProvider>
             <AppSidebar />
