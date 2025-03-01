@@ -7,6 +7,20 @@ export default {
             fontFamily: {
                 sans: ["Poppins", "sans-serif"],
             },
+            keyframes: {
+                slideDown: {
+                    from: { height: "0" },
+                    to: { height: "var(--radix-collapsible-content-height)" },
+                },
+                slideUp: {
+                    from: { height: "var(--radix-collapsible-content-height)" },
+                    to: { height: "0" },
+                },
+            },
+            animation: {
+                slideDown: "slideDown 300ms ease-out",
+                slideUp: "slideUp 300ms ease-out",
+            },
             borderRadius: {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",

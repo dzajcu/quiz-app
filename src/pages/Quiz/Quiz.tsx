@@ -5,13 +5,14 @@ import { Separator } from "@/components/ui/separator";
 import QuizAnswers from "@/pages/Quiz/components/QuizAnswers";
 import quizData from "@/data/quizData.json";
 import { useState } from "react";
+import BackgroundSection from "@/components/ui/background-section";
 
 interface UserAnswer {
     questionId: number;
     answerId: string;
 }
 
-const QuizPage = () => {
+const Quiz = () => {
     const { isMobile } = useSidebar();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
@@ -32,7 +33,9 @@ const QuizPage = () => {
         if (currentQuestionIndex < quizData.questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
             const nextQuestionId = quizData.questions[currentQuestionIndex + 1].id;
-            const nextAnswer = userAnswers.find(a => a.questionId === nextQuestionId);
+            const nextAnswer = userAnswers.find(
+                (a) => a.questionId === nextQuestionId
+            );
             setSelectedAnswer(nextAnswer?.answerId || "");
         } else {
             // Quiz completed - calculate results
@@ -67,7 +70,10 @@ const QuizPage = () => {
 
     return (
         <>
-            <div className="absolute bg-primary-light h-screen w-1/2 max-lg:w-full -z-10  max-lg:h-2/5"></div>
+            <BackgroundSection
+                color="bg-primary-light"
+                position="left"
+            />
             <div className="flex h-screen max-w-screen-2xl m-auto max-lg:flex-col w-full">
                 <div className="flex flex-1  justify-between flex-col p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[2] ">
                     <div className="flex justify-between">
@@ -153,4 +159,4 @@ const QuizPage = () => {
     );
 };
 
-export default QuizPage;
+export default Quiz;

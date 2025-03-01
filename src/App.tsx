@@ -1,8 +1,9 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SidebarWrapper from "./components/sidebar-wrapper.tsx";
-
-import QuizPage from "./pages/Quiz/QuizPage.tsx";
-
+import Quiz from "./pages/Quiz/Quiz.tsx";
+import QuizMenu from "./pages/Quiz/QuizMenu.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 
 function App() {
     // Sprawdzenie, czy systemowy motyw to "dark" czy "light"
@@ -16,9 +17,21 @@ function App() {
             defaultTheme={defaultTheme} // Ustawienie domyślnego motywu zgodnie z systemem
             storageKey="vite-ui-theme"
         >
-            <SidebarWrapper>
-                <QuizPage />
-            </SidebarWrapper>
+            <Toaster richColors />
+            <BrowserRouter>
+                <SidebarWrapper>
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<QuizMenu />}
+                        />
+                        <Route
+                            path="/quiz"
+                            element={<Quiz />}
+                        />
+                    </Routes>
+                </SidebarWrapper>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }
