@@ -128,14 +128,17 @@ const InputFile = ({ onFileSelect }: InputFileProps) => {
                                                     <span className="font-medium">
                                                         TXT Format:
                                                     </span>{" "}
-                                                    Each question on a new line:
+                                                    Title and questions separated by
+                                                    semicolons:
                                                 </p>
                                                 <p className="text-xs text-muted-foreground font-mono bg-muted p-1 rounded break-all">
-                                                    Question,CorrectAnswerNumber,Answer1,Answer2,Answer3,Answer4;
+                                                    Quiz
+                                                    Title;Question,CorrectAnswerNumber,Answer1,Answer2,Answer3,Answer4;
                                                 </p>
                                                 <p className="text-xs">Example:</p>
                                                 <p className="text-xs text-muted-foreground font-mono bg-muted p-1 rounded">
-                                                    Is Earth round?,1,Yes,No;
+                                                    My Geography Quiz;Is Earth
+                                                    round?,1,Yes,No;
                                                 </p>
                                             </div>
                                             <div className="space-y-1">
@@ -143,10 +146,11 @@ const InputFile = ({ onFileSelect }: InputFileProps) => {
                                                     <span className="font-medium">
                                                         JSON Format:
                                                     </span>{" "}
-                                                    Array of questions:
+                                                    Object with title and questions:
                                                 </p>
                                                 <p className="text-xs text-muted-foreground font-mono bg-muted p-1 rounded whitespace-pre-wrap">
                                                     {`{
+  "title": "My Geography Quiz",
   "questions": [{
     "question": "Is Earth round?",
     "answers": [

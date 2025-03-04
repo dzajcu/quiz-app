@@ -9,5 +9,6 @@ export interface QuizQuestion {
 }
 
 export interface QuizFile {
+    title: string;
     questions: QuizQuestion[];
 }

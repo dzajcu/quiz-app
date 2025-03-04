@@ -16,7 +16,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
 import { InputQuiz } from "@/components/ui/input-quiz";
 import { Plus, Save, Trash2, ArrowLeft } from "lucide-react";
 import { useState } from "react";
@@ -173,10 +172,24 @@ const QuizMenu = () => {
         setIsDialogOpen(true);
     };
 
-    const parseTxtFile = (content: string): Question[] => {
+    const parseTxtFile = (
+        content: string
+    ): { title: string; questions: Question[] } => {
         try {
-            const questions = content.split(";").filter((q) => q.trim());
-            return questions.map((questionStr) => {
+            const parts = content
+                .split(";")
+                .map((part) => part.trim())
+                .filter((part) => part);
+            if (parts.length < 2) {
+                throw new Error(
+                    "File must contain at least a title and one question"
+                );
+            }
+
+            const title = parts[0] || "New Quiz";
+            const questions = parts.slice(1);
+
+            const parsedQuestions = questions.map((questionStr) => {
                 const parts = questionStr.split(",").map((p) => p.trim());
                 if (parts.length < 3) {
                     throw new Error(`Invalid question format: ${questionStr}`);
@@ -203,6 +216,11 @@ const QuizMenu = () => {
                     correctAnswerIndex,
                 };
             });
+
+            return {
+                title,
+                questions: parsedQuestions,
+            };
         } catch (error) {
             throw new Error(
                 `Failed to parse TXT file: ${
@@ -212,13 +230,18 @@ const QuizMenu = () => {
         }
     };
 
-    const parseJsonFile = (content: QuizFile): Question[] => {
+    const parseJsonFile = (
+        content: QuizFile
+    ): { title: string; questions: Question[] } => {
         try {
-            return content.questions.map((q) => ({
-                question: q.question,
-                answers: q.answers.map((a) => a.text),
-                correctAnswerIndex: q.answers.findIndex((a) => a.isCorrect),
-            }));
+            return {
+                title: content.title || "New Quiz",
+                questions: content.questions.map((q) => ({
+                    question: q.question,
+                    answers: q.answers.map((a) => a.text),
+                    correctAnswerIndex: q.answers.findIndex((a) => a.isCorrect),
+                })),
+            };
         } catch (error) {
             throw new Error(
                 `Failed to parse JSON file: ${
@@ -233,34 +256,35 @@ const QuizMenu = () => {
         reader.onload = (e) => {
             try {
                 const content = e.target?.result as string;
-                let parsedQuestions: Question[];
+                let parsedData: { title: string; questions: Question[] };
 
                 if (file.name.toLowerCase().endsWith(".json")) {
                     const jsonContent = JSON.parse(content) as QuizFile;
-                    parsedQuestions = parseJsonFile(jsonContent);
+                    parsedData = parseJsonFile(jsonContent);
                 } else if (file.name.toLowerCase().endsWith(".txt")) {
-                    parsedQuestions = parseTxtFile(content);
+                    parsedData = parseTxtFile(content);
                 } else {
                     throw new Error(
                         "Unsupported file format. Please use .txt or .json"
                     );
                 }
 
-                if (parsedQuestions.length === 0) {
+                if (parsedData.questions.length === 0) {
                     throw new Error("No valid questions found in the file");
                 }
 
                 setQuestions(
-                    parsedQuestions.map((q) => ({
+                    parsedData.questions.map((q) => ({
                         question: q.question,
                         answers: q.answers,
                     }))
                 );
+                setQuizTitle(parsedData.title);
                 setShowCreateMethodDialog(false);
                 setIsDialogOpen(true);
 
                 toast.success("File loaded successfully", {
-                    description: `Loaded ${parsedQuestions.length} questions`,
+                    description: `Loaded ${parsedData.questions.length} questions`,
                 });
             } catch (error: unknown) {
                 toast.error("Error reading file", {
@@ -330,7 +354,7 @@ const QuizMenu = () => {
                                                         Number(e.target.value)
                                                     )
                                                 }
-                                                className="w-full"
+                                                className="w-18 mx-auto text-center"
                                                 placeholder="Number of questions"
                                             />
                                         </div>
