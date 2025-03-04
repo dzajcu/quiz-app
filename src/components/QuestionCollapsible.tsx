@@ -56,7 +56,7 @@ const QuestionCollapsible = ({
                         placeholder={`Question ${questionNumber}`}
                         value={question}
                         onChange={(e) => handleQuestionChange(e.target.value)}
-                        className="w-full"
+                        className="w-full text-sm "
                     />
                 </div>
                 <CollapsibleTrigger className="p-2 h-full hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">

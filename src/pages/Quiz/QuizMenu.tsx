@@ -17,7 +17,8 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { Plus, Save, Trash2 } from "lucide-react";
+import { InputQuiz } from "@/components/ui/input-quiz";
+import { Plus, Save, Trash2, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import QuestionCollapsible from "@/components/QuestionCollapsible";
 import { toast } from "sonner";
@@ -32,6 +33,7 @@ interface Question {
 
 const QuizMenu = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [quizTitle, setQuizTitle] = useState<string>("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
     const [showCreateMethodDialog, setShowCreateMethodDialog] = useState(false);
@@ -111,7 +113,10 @@ const QuizMenu = () => {
     };
 
     const handleSaveDraft = () => {
-        localStorage.setItem("quizDraft", JSON.stringify(questions));
+        localStorage.setItem(
+            "quizDraft",
+            JSON.stringify({ title: quizTitle, questions })
+        );
         toast.success("Draft Saved", {
             description: "Your quiz draft has been saved.",
         });
@@ -122,14 +127,33 @@ const QuizMenu = () => {
     const handleDiscardDraft = () => {
         localStorage.removeItem("quizDraft");
         setQuestions([]);
+        setQuizTitle("");
         setShowSaveDraftDialog(false);
         setIsDialogOpen(false);
+    };
+
+    const hasUnsavedChanges = () => {
+        return (
+            questions.some((q) => q.question || q.answers.some((a) => a)) ||
+            quizTitle.trim() !== ""
+        );
+    };
+
+    const handleBackToMethodSelect = () => {
+        if (hasUnsavedChanges()) {
+            setShowSaveDraftDialog(true);
+        } else {
+            setIsDialogOpen(false);
+            setShowCreateMethodDialog(true);
+        }
     };
 
     const handleOpenDialog = () => {
         const savedDraft = localStorage.getItem("quizDraft");
         if (savedDraft) {
-            setQuestions(JSON.parse(savedDraft));
+            const draft = JSON.parse(savedDraft);
+            setQuestions(draft.questions);
+            setQuizTitle(draft.title || "");
             setIsDialogOpen(true);
         } else {
             setShowCreateMethodDialog(true);
@@ -137,7 +161,7 @@ const QuizMenu = () => {
     };
 
     const handleCloseDialog = (open: boolean) => {
-        if (!open && questions.some((q) => q.question || q.answers.some((a) => a))) {
+        if (!open && hasUnsavedChanges()) {
             setShowSaveDraftDialog(true);
         } else {
             setIsDialogOpen(open);
@@ -296,7 +320,7 @@ const QuizMenu = () => {
                                             <p className="text-sm text-muted-foreground">
                                                 Enter the number of questions (1-200)
                                             </p>
-                                            <Input
+                                            <InputQuiz
                                                 type="number"
                                                 min="1"
                                                 max="200"
@@ -341,8 +365,31 @@ const QuizMenu = () => {
                         onOpenChange={handleCloseDialog}
                     >
                         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                            <DialogHeader>
-                                <DialogTitle>Create New Quiz</DialogTitle>
+                            <DialogHeader className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={handleBackToMethodSelect}
+                                        className="h-8 w-8 hover:bg-accent"
+                                    >
+                                        <ArrowLeft className="h-4 w-4" />
+                                    </Button>
+                                    <div className="flex items-center gap-2 flex-1">
+                                        <span className="text-lg font-semibold">
+                                            Create
+                                        </span>
+                                        <InputQuiz
+                                            value={quizTitle}
+                                            onChange={(e) =>
+                                                setQuizTitle(e.target.value)
+                                            }
+                                            placeholder="New Quiz"
+                                            className="text-lg font-semibold pl-0"
+                                            autoFocus
+                                        />
+                                    </div>
+                                </div>
                             </DialogHeader>
                             <div className="space-y-6">
                                 {questions.map((question, index) => (
