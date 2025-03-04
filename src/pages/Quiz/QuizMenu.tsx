@@ -23,6 +23,7 @@ import QuestionCollapsible from "@/components/QuestionCollapsible";
 import { toast } from "sonner";
 import quizData from "@/data/quizData.json";
 import InputFile from "@/components/ui/input-file";
+import { QuizFile } from "@/types/quiz";
 
 interface Question {
     question: string;
@@ -148,32 +149,99 @@ const QuizMenu = () => {
         setIsDialogOpen(true);
     };
 
+    const parseTxtFile = (content: string): Question[] => {
+        try {
+            const questions = content.split(";").filter((q) => q.trim());
+            return questions.map((questionStr) => {
+                const parts = questionStr.split(",").map((p) => p.trim());
+                if (parts.length < 3) {
+                    throw new Error(`Invalid question format: ${questionStr}`);
+                }
+
+                const question = parts[0];
+                const correctAnswerIndex = parseInt(parts[1]) - 1; // Convert to 0-based index
+                const answers = parts.slice(2, 6); // Take up to 4 answers
+
+                if (correctAnswerIndex < 0 || correctAnswerIndex >= answers.length) {
+                    throw new Error(
+                        `Invalid correct answer index in question: ${question}`
+                    );
+                }
+
+                // Ensure we always have exactly 4 answers
+                while (answers.length < 4) {
+                    answers.push("");
+                }
+
+                return {
+                    question,
+                    answers,
+                    correctAnswerIndex,
+                };
+            });
+        } catch (error) {
+            throw new Error(
+                `Failed to parse TXT file: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+        }
+    };
+
+    const parseJsonFile = (content: QuizFile): Question[] => {
+        try {
+            return content.questions.map((q) => ({
+                question: q.question,
+                answers: q.answers.map((a) => a.text),
+                correctAnswerIndex: q.answers.findIndex((a) => a.isCorrect),
+            }));
+        } catch (error) {
+            throw new Error(
+                `Failed to parse JSON file: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+        }
+    };
+
     const handleFileSelect = (file: File) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
-                const content = JSON.parse(e.target?.result as string);
-                if (Array.isArray(content)) {
-                    setQuestions(
-                        content.map((q) => ({
-                            question: q.question || "",
-                            answers: q.answers?.map(
-                                (a: { text: string }) => a.text || ""
-                            ) || ["", "", "", ""],
-                        }))
-                    );
-                    setShowCreateMethodDialog(false);
-                    setIsDialogOpen(true);
+                const content = e.target?.result as string;
+                let parsedQuestions: Question[];
+
+                if (file.name.toLowerCase().endsWith(".json")) {
+                    const jsonContent = JSON.parse(content) as QuizFile;
+                    parsedQuestions = parseJsonFile(jsonContent);
+                } else if (file.name.toLowerCase().endsWith(".txt")) {
+                    parsedQuestions = parseTxtFile(content);
                 } else {
-                    toast.error("Invalid file format", {
-                        description: "The file must contain an array of questions",
-                    });
+                    throw new Error(
+                        "Unsupported file format. Please use .txt or .json"
+                    );
                 }
+
+                if (parsedQuestions.length === 0) {
+                    throw new Error("No valid questions found in the file");
+                }
+
+                setQuestions(
+                    parsedQuestions.map((q) => ({
+                        question: q.question,
+                        answers: q.answers,
+                    }))
+                );
+                setShowCreateMethodDialog(false);
+                setIsDialogOpen(true);
+
+                toast.success("File loaded successfully", {
+                    description: `Loaded ${parsedQuestions.length} questions`,
+                });
             } catch (error: unknown) {
                 toast.error("Error reading file", {
-                    description: `Please make sure the file contains valid JSON: ${
-                        error instanceof Error ? error.message : "Unknown error"
-                    }`,
+                    description:
+                        error instanceof Error ? error.message : "Unknown error",
                 });
             }
         };
