@@ -5,7 +5,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import {
     AlertDialog,
@@ -17,11 +16,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Save } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Plus, Save, Trash2 } from "lucide-react";
+import { useState } from "react";
 import QuestionCollapsible from "@/components/QuestionCollapsible";
 import { toast } from "sonner";
 import quizData from "@/data/quizData.json";
+import InputFile from "@/components/ui/input-file";
 
 interface Question {
     question: string;
@@ -32,26 +33,18 @@ const QuizMenu = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
-
-    const loadDraft = () => {
-        const savedDraft = localStorage.getItem("quizDraft");
-        if (savedDraft) {
-            setQuestions(JSON.parse(savedDraft));
-        } else {
-            setQuestions([{ question: "", answers: ["", "", "", ""] }]);
-        }
-    };
-
-    // Load draft when component mounts
-    useEffect(() => {
-        loadDraft();
-    }, []);
+    const [showCreateMethodDialog, setShowCreateMethodDialog] = useState(false);
+    const [initialQuestionCount, setInitialQuestionCount] = useState<number>(1);
 
     const handleAddQuestion = () => {
         setQuestions((prev) => [
             ...prev,
             { question: "", answers: ["", "", "", ""] },
         ]);
+    };
+
+    const handleDeleteQuestion = (index: number) => {
+        setQuestions((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleQuestionChange = (index: number, questionText: string) => {
@@ -94,7 +87,7 @@ const QuizMenu = () => {
         }
 
         // Format questions to match quizData.json structure
-        const newQuestions = questions.map((q, qIndex) => ({
+        const formattedQuestions = questions.map((q, qIndex) => ({
             id: quizData.questions.length + qIndex + 1,
             question: q.question,
             answers: q.answers.map((text, index) => ({
@@ -105,6 +98,7 @@ const QuizMenu = () => {
         }));
 
         // Here you would typically make an API call to save the data
+        console.log("Saving quiz with questions:", formattedQuestions);
         toast.success("Success", {
             description: "Quiz has been created successfully!",
         });
@@ -132,8 +126,13 @@ const QuizMenu = () => {
     };
 
     const handleOpenDialog = () => {
-        loadDraft();
-        setIsDialogOpen(true);
+        const savedDraft = localStorage.getItem("quizDraft");
+        if (savedDraft) {
+            setQuestions(JSON.parse(savedDraft));
+            setIsDialogOpen(true);
+        } else {
+            setShowCreateMethodDialog(true);
+        }
     };
 
     const handleCloseDialog = (open: boolean) => {
@@ -149,6 +148,50 @@ const QuizMenu = () => {
         setIsDialogOpen(true);
     };
 
+    const handleFileSelect = (file: File) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = JSON.parse(e.target?.result as string);
+                if (Array.isArray(content)) {
+                    setQuestions(
+                        content.map((q) => ({
+                            question: q.question || "",
+                            answers: q.answers?.map(
+                                (a: { text: string }) => a.text || ""
+                            ) || ["", "", "", ""],
+                        }))
+                    );
+                    setShowCreateMethodDialog(false);
+                    setIsDialogOpen(true);
+                } else {
+                    toast.error("Invalid file format", {
+                        description: "The file must contain an array of questions",
+                    });
+                }
+            } catch (error: unknown) {
+                toast.error("Error reading file", {
+                    description: `Please make sure the file contains valid JSON: ${
+                        error instanceof Error ? error.message : "Unknown error"
+                    }`,
+                });
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const handleManualCreate = () => {
+        const count = Math.min(Math.max(1, initialQuestionCount), 200);
+        setQuestions(
+            Array.from({ length: count }, () => ({
+                question: "",
+                answers: ["", "", "", ""],
+            }))
+        );
+        setShowCreateMethodDialog(false);
+        setIsDialogOpen(true);
+    };
+
     return (
         <div className="relative min-h-screen">
             <BackgroundSection
@@ -158,41 +201,113 @@ const QuizMenu = () => {
             <div className="container mx-auto p-8">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-primary">Quiz Menu</h1>
+                    <Button
+                        className="flex items-center gap-2"
+                        onClick={handleOpenDialog}
+                    >
+                        <Plus className="w-4 h-4" />
+                        Create New Quiz
+                    </Button>
+
+                    <Dialog
+                        open={showCreateMethodDialog}
+                        onOpenChange={setShowCreateMethodDialog}
+                    >
+                        <DialogContent className="sm:max-w-4xl">
+                            <DialogHeader>
+                                <DialogTitle>Create New Quiz</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid grid-cols-[1fr_auto_1fr] gap-6 mt-4 items-center">
+                                {/* Manual Creation Tile */}
+                                <div className="flex flex-col p-6 space-y-4 border-1 border-gray-300 rounded-xl hover:border-primary shadow-lg transition-all duration-300 items-center justify-center">
+                                    <h3 className="text-lg font-semibold text-primary">
+                                        Create Manually
+                                    </h3>
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <p className="text-sm text-muted-foreground">
+                                                Enter the number of questions (1-200)
+                                            </p>
+                                            <Input
+                                                type="number"
+                                                min="1"
+                                                max="200"
+                                                value={initialQuestionCount}
+                                                onChange={(e) =>
+                                                    setInitialQuestionCount(
+                                                        Number(e.target.value)
+                                                    )
+                                                }
+                                                className="w-full"
+                                                placeholder="Number of questions"
+                                            />
+                                        </div>
+                                        <Button
+                                            className="w-full"
+                                            onClick={handleManualCreate}
+                                        >
+                                            Start Creating
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {/* Separator */}
+                                <div className="flex flex-col items-center gap-2">
+                                    <div className="w-px h-6 bg-gray-300"></div>
+                                    <span className="text-sm font-medium text-muted-foreground">
+                                        OR
+                                    </span>
+                                    <div className="w-px h-6 bg-gray-300"></div>
+                                </div>
+
+                                {/* File Upload Tile */}
+                                <div className="flex flex-col h-full">
+                                    <InputFile onFileSelect={handleFileSelect} />
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+
                     <Dialog
                         open={isDialogOpen}
                         onOpenChange={handleCloseDialog}
                     >
-                        <DialogTrigger asChild>
-                            <Button
-                                className="flex items-center gap-2"
-                                onClick={handleOpenDialog}
-                            >
-                                <Plus className="w-4 h-4" />
-                                Create New Quiz
-                            </Button>
-                        </DialogTrigger>
                         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Create New Quiz</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-6">
                                 {questions.map((question, index) => (
-                                    <QuestionCollapsible
+                                    <div
                                         key={index}
-                                        questionNumber={index + 1}
-                                        initialQuestion={question.question}
-                                        initialAnswers={question.answers}
-                                        onQuestionChange={(question) =>
-                                            handleQuestionChange(index, question)
-                                        }
-                                        onAnswerChange={(answerIndex, answer) =>
-                                            handleAnswerChange(
-                                                index,
-                                                answerIndex,
-                                                answer
-                                            )
-                                        }
-                                    />
+                                        className="flex relative "
+                                    >
+                                        <QuestionCollapsible
+                                            questionNumber={index + 1}
+                                            initialQuestion={question.question}
+                                            initialAnswers={question.answers}
+                                            onQuestionChange={(question) =>
+                                                handleQuestionChange(index, question)
+                                            }
+                                            onAnswerChange={(answerIndex, answer) =>
+                                                handleAnswerChange(
+                                                    index,
+                                                    answerIndex,
+                                                    answer
+                                                )
+                                            }
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="absolute -right-4 top-[2px] h-8 w-8 hover:text-red-500"
+                                            onClick={() =>
+                                                handleDeleteQuestion(index)
+                                            }
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
                                 ))}
                                 <div className="flex gap-4">
                                     <Button
@@ -215,36 +330,36 @@ const QuizMenu = () => {
                         </DialogContent>
                     </Dialog>
                 </div>
-            </div>
 
-            <AlertDialog
-                open={showSaveDraftDialog}
-                onOpenChange={setShowSaveDraftDialog}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Save Draft?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Would you like to save your quiz as a draft? You can
-                            continue editing it later.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={handleCancelSaveDraft}>
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogCancel
-                            className="bg-destructive text-destructive-foreground hover:bg-red-600 border-none hover:text-white"
-                            onClick={handleDiscardDraft}
-                        >
-                            Discard
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={handleSaveDraft}>
-                            Save Draft
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+                <AlertDialog
+                    open={showSaveDraftDialog}
+                    onOpenChange={setShowSaveDraftDialog}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Save Draft?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Would you like to save your quiz as a draft? You can
+                                continue editing it later.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel onClick={handleCancelSaveDraft}>
+                                Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogCancel
+                                className="bg-destructive text-destructive-foreground hover:bg-red-600 border-none hover:text-white"
+                                onClick={handleDiscardDraft}
+                            >
+                                Discard
+                            </AlertDialogCancel>
+                            <AlertDialogAction onClick={handleSaveDraft}>
+                                Save Draft
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
         </div>
     );
 };

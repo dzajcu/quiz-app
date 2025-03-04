@@ -59,9 +59,9 @@ const QuestionCollapsible = ({
                         className="w-full"
                     />
                 </div>
-                <CollapsibleTrigger className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <CollapsibleTrigger className="p-2 h-full hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
                     <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-300 ${
+                        className={`h-4 w-4 transition-transform duration-300  ${
                             isOpen ? "transform rotate-180" : ""
                         }`}
                     />
