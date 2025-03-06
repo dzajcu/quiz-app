@@ -108,7 +108,7 @@ const InputFile = ({ onFileSelect }: InputFileProps) => {
                     <div className="flex flex-col items-center text-center space-y-2">
                         <div className="flex items-center gap-2">
                             <p className="text-lg font-semibold text-primary">
-                                Upload Questions File
+                                Upload Quiz File
                             </p>
                             <TooltipProvider>
                                 <Tooltip>

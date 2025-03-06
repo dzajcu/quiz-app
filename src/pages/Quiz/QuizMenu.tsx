@@ -333,7 +333,7 @@ const QuizMenu = () => {
                             <DialogHeader>
                                 <DialogTitle>Create New Quiz</DialogTitle>
                             </DialogHeader>
-                            <div className="grid grid-cols-[1fr_auto_1fr] gap-6 mt-4 items-center">
+                            <div className="grid md:grid-cols-[1fr_auto_1fr] grid-cols-1 gap-6 mt-4 items-center">
                                 {/* Manual Creation Tile */}
                                 <div className="flex flex-col p-6 space-y-4 border-1 border-gray-300 rounded-xl hover:border-primary shadow-lg transition-all duration-300 items-center justify-center">
                                     <h3 className="text-lg font-semibold text-primary">
@@ -368,12 +368,12 @@ const QuizMenu = () => {
                                 </div>
 
                                 {/* Separator */}
-                                <div className="flex flex-col items-center gap-2">
-                                    <div className="w-px h-6 bg-gray-300"></div>
+                                <div className="flex flex-col m-auto max-md:flex-row items-center gap-2">
+                                    <div className="w-px h-6 max-md:w-6 max-md:h-px bg-gray-300"></div>
                                     <span className="text-sm font-medium text-muted-foreground">
                                         OR
                                     </span>
-                                    <div className="w-px h-6 bg-gray-300"></div>
+                                    <div className="w-px h-6 max-md:w-6 max-md:h-px bg-gray-300"></div>
                                 </div>
 
                                 {/* File Upload Tile */}
