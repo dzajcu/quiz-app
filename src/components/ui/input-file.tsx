@@ -5,17 +5,19 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 
 interface InputFileProps {
     onFileSelect: (file: File) => void;
+    id?: string;
+    accept?: string;
 }
 
-const InputFile = ({ onFileSelect }: InputFileProps) => {
+const InputFile: React.FC<InputFileProps> = ({ onFileSelect, id, accept }) => {
     const [isDragging, setIsDragging] = useState(false);
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             onFileSelect(file);
@@ -75,7 +77,7 @@ const InputFile = ({ onFileSelect }: InputFileProps) => {
     return (
         <div className="flex items-center justify-center w-full h-full">
             <label
-                htmlFor="dropzone-file"
+                htmlFor={id || "file-upload"}
                 className={cn(
                     "flex flex-col items-center justify-center w-full h-full p-6 border-2 border-dashed rounded-xl cursor-pointer bg-background/50 transition-all duration-300 ease-in-out transform hover:scale-[1.01] group",
                     isDragging
@@ -174,11 +176,11 @@ const InputFile = ({ onFileSelect }: InputFileProps) => {
                     </div>
                 </div>
                 <input
-                    id="dropzone-file"
+                    id={id || "file-upload"}
                     type="file"
                     className="hidden"
-                    accept=".txt,.json"
                     onChange={handleFileChange}
+                    accept={accept}
                 />
             </label>
         </div>
