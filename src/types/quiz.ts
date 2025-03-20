@@ -5,6 +5,11 @@ export interface Answer {
     isCorrect: boolean;
 }
 
+export interface UserAnswer {
+    questionId: number;
+    answerId: string;
+}
+
 export interface RawQuestion {
     id?: number;
     question: string;
@@ -38,6 +43,34 @@ export interface QuizAnswerProps {
     value: string;
 }
 
+export interface QuizHeaderProps {
+    currentQuestionIndex: number;
+    totalQuestions: number;
+    questionText: string;
+}
+
+export interface QuizContentProps {
+    answers: Answer[];
+    selectedAnswer: string;
+    onAnswerSelect: (value: string) => void;
+    onPrevious: () => void;
+    onNext: () => void;
+    isFirstQuestion: boolean;
+    isLastQuestion: boolean;
+}
+
+export interface QuizLayoutProps {
+    leftSection: React.ReactNode;
+    rightSection: React.ReactNode;
+}
+
+export interface QuizNavigationProps {
+    onPrevious: () => void;
+    onNext: () => void;
+    isFirstQuestion: boolean;
+    isLastQuestion: boolean;
+}
+
 export interface QuestionCollapsibleProps {
     questionNumber: number;
     initialQuestion?: string;
@@ -67,6 +100,21 @@ export interface UseQuizFilesProps {
     setQuizTitle: (title: string) => void;
     closeCreateMethodDialog: () => void;
     openQuizDialog: () => void;
+}
+
+export interface UseQuizPlaybackResult {
+    currentQuestionIndex: number;
+    userAnswers: UserAnswer[];
+    selectedAnswer: string;
+    currentQuestion: {
+        id: number;
+        question: string;
+        answers: Answer[];
+    };
+    handleAnswerSelect: (value: string) => void;
+    handleNextQuestion: () => void;
+    handlePreviousQuestion: () => void;
+    isLastQuestion: boolean;
 }
 
 // Context types
