@@ -1,43 +1,29 @@
-// components/QuizMenu/QuizCreationDialog.tsx
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { InputQuiz } from "@/components/ui/input-quiz";
 import { Save, ArrowLeft, Plus } from "lucide-react";
-import { Question } from "@/types/quiz";
-import QuestionList from "./QuestionList";
+import QuizQuestionList from "./QuizCreationQuestionList";
+import { useQuiz } from "@/contexts/QuizContext";
 
-interface QuizCreationDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    quizTitle: string;
-    setQuizTitle: (title: string) => void;
-    questions: Question[];
-    setQuestions: (questions: Question[]) => void;
-    onAddQuestion: () => void;
-    onDeleteQuestion: (index: number) => void;
-    onQuestionChange: (index: number, questionText: string) => void;
-    onAnswerChange: (index: number, answerIndex: number, answerText: string) => void;
-    onSaveQuiz: () => void;
-    onBackToMethodSelect: () => void;
-}
+const QuizCreationDialog = () => {
+    const {
+        isQuizDialogOpen,
+        handleCloseQuizDialog,
+        quizTitle,
+        setQuizTitle,
+        questions,
+        handleAddQuestion,
+        handleDeleteQuestion,
+        handleQuestionChange,
+        handleAnswerChange,
+        handleSaveQuiz,
+        handleBackToMethodSelect,
+    } = useQuiz();
 
-const QuizCreationDialog: React.FC<QuizCreationDialogProps> = ({
-    open,
-    onOpenChange,
-    quizTitle,
-    setQuizTitle,
-    questions,
-    onAddQuestion,
-    onDeleteQuestion,
-    onQuestionChange,
-    onAnswerChange,
-    onSaveQuiz,
-    onBackToMethodSelect,
-}) => {
     return (
         <Dialog
-            open={open}
-            onOpenChange={onOpenChange}
+            open={isQuizDialogOpen}
+            onOpenChange={handleCloseQuizDialog}
         >
             <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader className="space-y-4">
@@ -45,7 +31,7 @@ const QuizCreationDialog: React.FC<QuizCreationDialogProps> = ({
                         <Button
                             variant="ghost"
                             size="icon"
-                            onClick={onBackToMethodSelect}
+                            onClick={handleBackToMethodSelect}
                             className="h-8 w-8 hover:bg-accent"
                         >
                             <ArrowLeft className="h-4 w-4" />
@@ -62,24 +48,24 @@ const QuizCreationDialog: React.FC<QuizCreationDialogProps> = ({
                         </div>
                     </div>
                 </DialogHeader>
-                <QuestionList
+                <QuizQuestionList
                     questions={questions}
-                    onQuestionChange={onQuestionChange}
-                    onAnswerChange={onAnswerChange}
-                    onDeleteQuestion={onDeleteQuestion}
+                    onQuestionChange={handleQuestionChange}
+                    onAnswerChange={handleAnswerChange}
+                    onDeleteQuestion={handleDeleteQuestion}
                 />
                 <div className="flex gap-4 mt-6">
                     <Button
                         variant="outline"
                         className="flex-1"
-                        onClick={onAddQuestion}
+                        onClick={handleAddQuestion}
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Question
                     </Button>
                     <Button
                         className="flex-1"
-                        onClick={onSaveQuiz}
+                        onClick={handleSaveQuiz}
                     >
                         <Save className="w-4 h-4 mr-2" />
                         Create Quiz

@@ -1,0 +1,162 @@
+import { useCallback } from "react";
+import { Question, QuizFile, UseQuizFilesProps } from "@/types/quiz";
+import { toast } from "sonner";
+
+export const useQuizFiles = ({
+    setQuestions,
+    setQuizTitle,
+    closeCreateMethodDialog,
+    openQuizDialog,
+}: UseQuizFilesProps) => {
+    const parseTxtFile = useCallback(
+        (content: string): { title: string; questions: Question[] } => {
+            try {
+                const parts = content
+                    .split(";")
+                    .map((part) => part.trim())
+                    .filter((part) => part);
+                if (parts.length < 2) {
+                    throw new Error(
+                        "File must contain at least a title and one question"
+                    );
+                }
+
+                const title = parts[0] || "New Quiz";
+                const questions = parts.slice(1);
+
+                const parsedQuestions = questions.map((questionStr) => {
+                    const parts = questionStr.split(",").map((p) => p.trim());
+                    if (parts.length < 3) {
+                        throw new Error(`Invalid question format: ${questionStr}`);
+                    }
+
+                    const question = parts[0];
+                    const correctAnswerIndex = parseInt(parts[1]) - 1;
+                    const answers = parts.slice(2, 6);
+
+                    if (
+                        correctAnswerIndex < 0 ||
+                        correctAnswerIndex >= answers.length
+                    ) {
+                        throw new Error(
+                            `Invalid correct answer index in question: ${question}`
+                        );
+                    }
+
+                    while (answers.length < 4) {
+                        answers.push("");
+                    }
+
+                    return {
+                        question,
+                        answers,
+                        correctAnswerIndex,
+                    };
+                });
+
+                return {
+                    title,
+                    questions: parsedQuestions,
+                };
+            } catch (error) {
+                throw new Error(
+                    `Failed to parse TXT file: ${
+                        error instanceof Error ? error.message : "Unknown error"
+                    }`
+                );
+            }
+        },
+        []
+    );
+
+    const parseJsonFile = useCallback(
+        (content: QuizFile): { title: string; questions: Question[] } => {
+            try {
+                return {
+                    title: content.title || "New Quiz",
+                    questions: content.questions.map((q) => ({
+                        question: q.question,
+                        answers: q.answers.map((a) => a.text),
+                        correctAnswerIndex: q.answers.findIndex((a) => a.isCorrect),
+                    })),
+                };
+            } catch (error) {
+                throw new Error(
+                    `Failed to parse JSON file: ${
+                        error instanceof Error ? error.message : "Unknown error"
+                    }`
+                );
+            }
+        },
+        []
+    );
+
+    const handleFileSelect = useCallback(
+        (file: File) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const content = e.target?.result as string;
+                    let parsedData: { title: string; questions: Question[] };
+
+                    if (file.name.toLowerCase().endsWith(".json")) {
+                        const jsonContent = JSON.parse(content) as QuizFile;
+                        parsedData = parseJsonFile(jsonContent);
+                    } else if (file.name.toLowerCase().endsWith(".txt")) {
+                        parsedData = parseTxtFile(content);
+                    } else {
+                        throw new Error(
+                            "Unsupported file format. Please use .txt or .json"
+                        );
+                    }
+
+                    if (parsedData.questions.length === 0) {
+                        throw new Error("No valid questions found in the file");
+                    }
+
+                    const mappedQuestions = parsedData.questions.map((q) => ({
+                        question: q.question,
+                        answers: q.answers,
+                    }));
+
+                    setQuestions(mappedQuestions);
+                    setQuizTitle(parsedData.title);
+
+                    closeCreateMethodDialog();
+                    openQuizDialog();
+
+                    toast.success("File loaded successfully", {
+                        description: `Loaded ${parsedData.questions.length} questions`,
+                    });
+                } catch (error: unknown) {
+                    toast.error("Error reading file", {
+                        description:
+                            error instanceof Error ? error.message : "Unknown error",
+                    });
+                }
+            };
+            reader.readAsText(file);
+        },
+        [parseTxtFile, parseJsonFile, closeCreateMethodDialog, openQuizDialog]
+    );
+
+    const handleManualCreate = useCallback(
+        (count: number) => {
+            const validCount = Math.min(Math.max(1, count), 200);
+            setQuestions(
+                Array.from({ length: validCount }, () => ({
+                    question: "",
+                    answers: ["", "", "", ""],
+                }))
+            );
+            closeCreateMethodDialog();
+            openQuizDialog();
+        },
+        [closeCreateMethodDialog, openQuizDialog]
+    );
+
+    return {
+        handleFileSelect,
+        handleManualCreate,
+    };
+};

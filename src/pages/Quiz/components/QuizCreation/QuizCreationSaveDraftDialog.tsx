@@ -1,4 +1,3 @@
-// components/QuizMenu/SaveDraftDialog.tsx
 import {
     AlertDialog,
     AlertDialogAction,
@@ -9,27 +8,21 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import useDialogState from "@/hooks/useDialogState";
+import { useQuiz } from "@/contexts/QuizContext";
 
-interface SaveDraftDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    onSaveDraft: () => void;
-    onDiscardDraft: () => void;
-    onCancel: () => void;
-}
+const SaveDraftDialog = () => {
+    const {
+        isSaveDraftDialogOpen,
+        setShowSaveDraftDialog,
+        handleSaveDraft,
+        handleDiscardDraft,
+        handleCancelSaveDraft,
+    } = useQuiz();
 
-const SaveDraftDialog: React.FC<SaveDraftDialogProps> = ({
-    open,
-    onOpenChange,
-    onSaveDraft,
-    onDiscardDraft,
-    onCancel,
-}) => {
     return (
         <AlertDialog
-            open={open}
-            onOpenChange={onOpenChange}
+            open={isSaveDraftDialogOpen}
+            onOpenChange={setShowSaveDraftDialog}
         >
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -40,14 +33,16 @@ const SaveDraftDialog: React.FC<SaveDraftDialogProps> = ({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={handleCancelSaveDraft}>
+                        Cancel
+                    </AlertDialogCancel>
                     <AlertDialogCancel
                         className="bg-destructive text-destructive-foreground hover:bg-red-600 border-none hover:text-white"
-                        onClick={onDiscardDraft}
+                        onClick={handleDiscardDraft}
                     >
                         Discard
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={onSaveDraft}>
+                    <AlertDialogAction onClick={handleSaveDraft}>
                         Save Draft
                     </AlertDialogAction>
                 </AlertDialogFooter>

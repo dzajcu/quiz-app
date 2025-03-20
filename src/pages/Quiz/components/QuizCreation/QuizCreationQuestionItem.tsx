@@ -1,16 +1,7 @@
-// components/QuizMenu/QuestionItem.tsx
-import QuestionCollapsible from "@/components/QuestionCollapsible";
+import QuizCreationQuestionCollapsible from "./QuizCreationQuestionCollapsible";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { Question } from "@/types/quiz";
-
-interface QuestionItemProps {
-    question: Question;
-    index: number;
-    onQuestionChange: (questionText: string) => void;
-    onAnswerChange: (answerIndex: number, answerText: string) => void;
-    onDelete: () => void;
-}
+import { QuestionItemProps } from "@/types/quiz";
 
 const QuestionItem: React.FC<QuestionItemProps> = ({
     question,
@@ -21,7 +12,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
 }) => {
     return (
         <div className="flex relative ">
-            <QuestionCollapsible
+            <QuizCreationQuestionCollapsible
                 questionNumber={index + 1}
                 initialQuestion={question.question}
                 initialAnswers={question.answers}

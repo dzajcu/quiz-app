@@ -6,14 +6,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useState, useEffect } from "react";
-
-interface QuestionCollapsibleProps {
-    questionNumber: number;
-    initialQuestion?: string;
-    initialAnswers?: string[];
-    onQuestionChange: (question: string) => void;
-    onAnswerChange: (answerIndex: number, answer: string) => void;
-}
+import { QuestionCollapsibleProps } from "@/types/quiz";
 
 const QuestionCollapsible = ({
     questionNumber,

@@ -4,6 +4,7 @@ import Quiz from "./pages/Quiz/Quiz.tsx";
 import QuizMenu from "./pages/Quiz/QuizMenu.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { QuizProvider } from "@/contexts/QuizContext";
 
 function App() {
     // Sprawdzenie, czy systemowy motyw to "dark" czy "light"
@@ -23,7 +24,11 @@ function App() {
                     <Routes>
                         <Route
                             path="/"
-                            element={<QuizMenu />}
+                            element={
+                                <QuizProvider>
+                                    <QuizMenu />
+                                </QuizProvider>
+                            }
                         />
                         <Route
                             path="/quiz"

@@ -1,10 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroupItem } from "@/components/ui/radio-group";
-
-interface QuizAnswerProps {
-    answer: string;
-    value: string;
-}
+import { QuizAnswerProps } from "@/types/quiz";
 
 const QuizAnswer = ({ answer, value }: QuizAnswerProps) => {
     return (

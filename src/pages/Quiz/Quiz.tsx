@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Menu } from "lucide-react";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import QuizAnswers from "@/pages/Quiz/components/QuizAnswers";
+import QuizAnswers from "@/pages/Quiz/components/QuizPlayback/QuizAnswers";
 import quizData from "@/data/quizData.json";
 import { useState } from "react";
 import BackgroundSection from "@/components/ui/background-section";
@@ -76,7 +76,7 @@ const Quiz = () => {
             />
             <div className="flex h-screen max-w-screen-2xl m-auto max-lg:flex-col w-full">
                 <div className="flex flex-1  justify-between flex-col p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[2] ">
-                    <div className="flex justify-between">
+                    <div className="w-max">
                         <div className="flex items-center opacity-70 cursor-pointer p-2 group hover:opacity-80">
                             <ArrowLeft className="h-3.5 w-3.5 text-primary mr-2 transition-transform group-hover:-translate-x-1" />
                             <p className="underline text-xs font-bold text-primary">

@@ -1,4 +1,3 @@
-// components/QuizMenu/CreateMethodDialog.tsx
 import {
     Dialog,
     DialogContent,
@@ -10,30 +9,25 @@ import { InputQuiz } from "@/components/ui/input-quiz";
 import InputFile from "@/components/ui/input-file";
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useQuiz } from "@/contexts/QuizContext";
 
-interface CreateMethodDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    onFileSelect: (file: File) => void;
-    onManualCreate: (count: number) => void;
-}
-
-const CreateMethodDialog: React.FC<CreateMethodDialogProps> = ({
-    open,
-    onOpenChange,
-    onFileSelect,
-    onManualCreate,
-}) => {
+const CreateMethodDialog = () => {
+    const {
+        isCreateMethodDialogOpen,
+        setShowCreateMethodDialog,
+        handleFileSelect,
+        handleManualCreate,
+    } = useQuiz();
     const [initialQuestionCount, setInitialQuestionCount] = useState<number>(1);
 
     const handleManualCreateClick = () => {
-        onManualCreate(Number(initialQuestionCount));
+        handleManualCreate(Number(initialQuestionCount));
     };
 
     return (
         <Dialog
-            open={open}
-            onOpenChange={onOpenChange}
+            open={isCreateMethodDialogOpen}
+            onOpenChange={setShowCreateMethodDialog}
         >
             <DialogContent className="sm:max-w-4xl">
                 <DialogHeader>
@@ -86,7 +80,7 @@ const CreateMethodDialog: React.FC<CreateMethodDialogProps> = ({
                     {/* File Upload Tile */}
                     <div className="flex flex-col h-full">
                         <InputFile
-                            onFileSelect={onFileSelect}
+                            onFileSelect={handleFileSelect}
                             accept=".txt,.json"
                         />
                     </div>

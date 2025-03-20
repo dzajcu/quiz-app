@@ -1,13 +1,5 @@
-// components/QuizMenu/QuestionList.tsx
-import { Question } from "@/types/quiz";
-import QuestionItem from "./QuestionItem";
-
-interface QuestionListProps {
-    questions: Question[];
-    onQuestionChange: (index: number, questionText: string) => void;
-    onAnswerChange: (index: number, answerIndex: number, answerText: string) => void;
-    onDeleteQuestion: (index: number) => void;
-}
+import { QuestionListProps } from "@/types/quiz";
+import QuizCreationQuestionItem from "./QuizCreationQuestionItem";
 
 const QuestionList: React.FC<QuestionListProps> = ({
     questions,
@@ -18,7 +10,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
     return (
         <div className="space-y-6">
             {questions.map((question, index) => (
-                <QuestionItem
+                <QuizCreationQuestionItem
                     key={index}
                     index={index}
                     question={question}

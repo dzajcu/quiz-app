@@ -1,17 +1,6 @@
 import { RadioGroup } from "@/components/ui/radio-group";
 import QuizAnswer from "./QuizAnswer";
-
-interface Answer {
-    id: string;
-    text: string;
-    isCorrect: boolean;
-}
-
-interface QuizAnswersProps {
-    answers: Answer[];
-    selectedValue: string;
-    onAnswerSelect: (value: string) => void;
-}
+import { QuizAnswersProps } from "@/types/quiz";
 
 const QuizAnswers = ({
     answers,
