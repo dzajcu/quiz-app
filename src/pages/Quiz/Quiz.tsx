@@ -1,6 +1,6 @@
 import quizData from "@/data/quizData.json";
 import { useQuizPlayback } from "@/hooks/quiz/useQuizPlayback";
-import QuizLayout from "./components/QuizPlayback/QuizLayout";
+import BackgroundLayout from "@/components/BackgroundLayout";
 import QuizHeader from "./components/QuizPlayback/QuizHeader";
 import QuizContent from "./components/QuizPlayback/QuizContent";
 
@@ -45,7 +45,7 @@ const Quiz = () => {
     );
 
     return (
-        <QuizLayout
+        <BackgroundLayout
             leftSection={leftSection}
             rightSection={rightSection}
         />
