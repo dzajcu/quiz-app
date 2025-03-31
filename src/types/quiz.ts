@@ -62,6 +62,7 @@ export interface QuizContentProps {
 export interface QuizLayoutProps {
     leftSection: React.ReactNode;
     rightSection: React.ReactNode;
+    sectionPadding?: string;
 }
 
 export interface QuizNavigationProps {
