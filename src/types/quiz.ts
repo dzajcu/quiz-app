@@ -63,6 +63,7 @@ export interface QuizLayoutProps {
     leftSection: React.ReactNode;
     rightSection: React.ReactNode;
     sectionPadding?: string;
+    isWrapper?: boolean;
 }
 
 export interface QuizNavigationProps {
@@ -162,3 +163,5 @@ export interface QuizHandlers {
 }
 
 export type QuizContextType = QuizContextState & QuizDialogState & QuizHandlers;
+
+

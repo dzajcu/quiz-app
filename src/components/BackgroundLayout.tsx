@@ -2,14 +2,14 @@ import { Separator } from "@/components/ui/separator";
 import BackgroundSection from "@/components/ui/background-section";
 import { QuizLayoutProps } from "@/types/quiz";
 
-const QuizLayout = ({ leftSection, rightSection, sectionPadding }: QuizLayoutProps) => {
+const QuizLayout = ({ leftSection, rightSection, sectionPadding, isWrapper=true }: QuizLayoutProps) => {
     return (
         <>
             <BackgroundSection
                 color="bg-primary-light"
                 position="left"
             />
-            <div className="flex h-screen max-w-screen-2xl m-auto max-lg:flex-col w-full">
+            <div className={`flex h-screen ${isWrapper ? "max-w-screen-2xl" : ""} m-auto max-lg:flex-col w-full`}>
                 <div className={`flex flex-1 justify-between flex-col p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[2] ${sectionPadding}`}>
                     {leftSection}
                 </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
     Card,
     CardHeader,
@@ -13,9 +12,9 @@ interface QuizMenuCardProps {
     description: string;
 }
 
-const QuizMenuCard: React.FC<QuizMenuCardProps> = ({ title, description }) => {
+const QuizMenuCard = ({ title, description }: QuizMenuCardProps) => {
     return (
-        <Card className="relative w-80 max-w-xs h-40 flex flex-col justify-between bg-primary overflow-hidden">
+        <Card className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary overflow-hidden border-none">
             <CardHeader className="py-0">
                 <Rainbow className="inline-block mr-2 size-16 text-white" />
             </CardHeader>
@@ -25,8 +24,8 @@ const QuizMenuCard: React.FC<QuizMenuCardProps> = ({ title, description }) => {
             <CardFooter className="py-2 text-sm text-white">
                 {description}
             </CardFooter>
-            <div className="h-36 w-36 bg-white opacity-30 rounded-full absolute right-[-22px] bottom-[-40px]"></div>
-            <div className="h-36 w-36 bg-white opacity-30 rounded-full absolute right-[-60px] top-[-30px]"></div>
+            <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-22px] bottom-[-40px]"></div>
+            <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-60px] top-[-30px]"></div>
         </Card>
     );
 };
