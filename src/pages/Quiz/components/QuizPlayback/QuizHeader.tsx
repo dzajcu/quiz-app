@@ -1,6 +1,9 @@
 import { ArrowLeft, Menu } from "lucide-react";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { QuizHeaderProps } from "@/types/quiz";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import QuizExitDialog from "./QuizExitDialog";
 
 const QuizHeader = ({
     currentQuestionIndex,
@@ -8,11 +11,25 @@ const QuizHeader = ({
     questionText,
 }: QuizHeaderProps) => {
     const { isMobile } = useSidebar();
+    const navigate = useNavigate();
+    const [isExitDialogOpen, setIsExitDialogOpen] = useState(false);
+
+    const handleReturn = () => {
+        setIsExitDialogOpen(true);
+    };
+
+    const handleExitConfirm = () => {
+        setIsExitDialogOpen(false);
+        navigate("/quiz");
+    };
 
     return (
         <>
             <div className="w-max">
-                <div className="flex items-center opacity-70 cursor-pointer p-2 group hover:opacity-80">
+                <div
+                    className="flex items-center opacity-70 cursor-pointer p-2 group hover:opacity-80"
+                    onClick={handleReturn}
+                >
                     <ArrowLeft className="h-3.5 w-3.5 text-primary mr-2 transition-transform group-hover:-translate-x-1" />
                     <p className="underline text-xs font-bold text-primary">
                         Return
@@ -35,6 +52,11 @@ const QuizHeader = ({
                 </h2>
                 <p className="mt-2 text-primary-muted text-sm">Select one answer</p>
             </div>
+            <QuizExitDialog
+                isOpen={isExitDialogOpen}
+                onClose={() => setIsExitDialogOpen(false)}
+                onConfirm={handleExitConfirm}
+            />
         </>
     );
 };

@@ -7,7 +7,7 @@ import {
     CardHeader,
     CardTitle,
     CardContent,
-    CardFooter,
+    // CardFooter,
 } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 
@@ -27,7 +27,7 @@ const QuizCreationButton = () => {
                     <CardTitle className="text-xl text-white">Create New Quiz</CardTitle>
                 </CardContent>
                 {/* <CardFooter className="py-2 text-sm text-white">
-                    chuj zajebany
+                    footer
                 </CardFooter> */}
                 <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-22px] bottom-[-40px]"></div>
                 <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-60px] top-[-30px]"></div>

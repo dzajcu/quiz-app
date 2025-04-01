@@ -1,13 +1,35 @@
 import { useState } from "react";
-import quizData from "@/data/quizData.json";
 import { UserAnswer, UseQuizPlaybackResult } from "@/types/quiz";
 
-export function useQuizPlayback(): UseQuizPlaybackResult {
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+interface UseQuizPlaybackProps {
+    questions: Array<{
+        id: number;
+        question: string;
+        answers: Array<{
+            id: string;
+            text: string;
+            isCorrect: boolean;
+        }>;
+    }>;
+    initialIndex?: number;
+}
+
+export const useQuizPlayback = (
+    props?: UseQuizPlaybackProps
+): UseQuizPlaybackResult => {
+    const questions = props?.questions || [];
+    const initialIndex = props?.initialIndex || 0;
+
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
-    const [selectedAnswer, setSelectedAnswer] = useState<string>("");
-    const currentQuestion = quizData.questions[currentQuestionIndex];
-    const isLastQuestion = currentQuestionIndex === quizData.questions.length - 1;
+    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+    const currentQuestion = questions[currentQuestionIndex] || {
+        id: 0,
+        question: "",
+        answers: [],
+    };
+    const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
     const handleAnswerSelect = (value: string) => {
         setSelectedAnswer(value);
@@ -21,19 +43,17 @@ export function useQuizPlayback(): UseQuizPlaybackResult {
     };
 
     const handleNextQuestion = () => {
-        if (currentQuestionIndex < quizData.questions.length - 1) {
+        if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
-            const nextQuestionId = quizData.questions[currentQuestionIndex + 1].id;
+            const nextQuestionId = questions[currentQuestionIndex + 1].id;
             const nextAnswer = userAnswers.find(
                 (a) => a.questionId === nextQuestionId
             );
-            setSelectedAnswer(nextAnswer?.answerId || "");
+            setSelectedAnswer(nextAnswer?.answerId || null);
         } else {
             // Quiz completed - calculate results
             const correctAnswers = userAnswers.filter((answer) => {
-                const question = quizData.questions.find(
-                    (q) => q.id === answer.questionId
-                );
+                const question = questions.find((q) => q.id === answer.questionId);
                 const selectedAnswer = question?.answers.find(
                     (a) => a.id === answer.answerId
                 );
@@ -42,7 +62,7 @@ export function useQuizPlayback(): UseQuizPlaybackResult {
 
             console.log("Quiz completed!");
             console.log(
-                `Correct answers: ${correctAnswers} out of ${quizData.questions.length}`
+                `Correct answers: ${correctAnswers} out of ${questions.length}`
             );
             console.log("User answers:", userAnswers);
         }
@@ -52,10 +72,9 @@ export function useQuizPlayback(): UseQuizPlaybackResult {
         if (currentQuestionIndex > 0) {
             setCurrentQuestionIndex((prev) => prev - 1);
             const previousAnswer = userAnswers.find(
-                (a) =>
-                    a.questionId === quizData.questions[currentQuestionIndex - 1].id
+                (a) => a.questionId === questions[currentQuestionIndex - 1].id
             );
-            setSelectedAnswer(previousAnswer?.answerId || "");
+            setSelectedAnswer(previousAnswer?.answerId || null);
         }
     };
 
@@ -69,4 +88,4 @@ export function useQuizPlayback(): UseQuizPlaybackResult {
         handlePreviousQuestion,
         isLastQuestion,
     };
-}
+};
