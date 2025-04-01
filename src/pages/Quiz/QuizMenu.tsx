@@ -8,7 +8,6 @@ import QuizMenuOptions from "./components/QuizMenu/QuizMenuOptions";
 interface Quiz {
     id: string;
     title: string;
-    description: string;
     questions: {
         id: number;
         question: string;

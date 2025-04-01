@@ -55,7 +55,7 @@ const Quiz = () => {
     if (!loading && !quiz) {
         return (
             <Navigate
-                to="/quizzes"
+                to="/quiz"
                 replace
             />
         );

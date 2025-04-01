@@ -18,7 +18,7 @@ const QuizCreationButton = () => {
         <>
             <Card
                 onClick={handleOpenQuizDialog}
-                className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary overflow-hidden cursor-pointer"
+                className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary-button overflow-hidden cursor-pointer"
             >
                 <CardHeader className="py-4">
                     <Plus className="inline-block mr-2 size-12 text-white" />

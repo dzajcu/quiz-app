@@ -22,7 +22,7 @@ const QuizMenuCard = ({
 }: QuizMenuCardProps) => {
     return (
         <Card
-            className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary overflow-hidden border-none hover:brightness-110 transition-all cursor-pointer"
+            className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary-button overflow-hidden border-none hover:brightness-110 transition-all cursor-pointer"
             onClick={() => onQuizSelect && id && onQuizSelect(title, id)}
         >
             <CardHeader className="py-0">

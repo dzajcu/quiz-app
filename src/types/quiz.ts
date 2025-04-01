@@ -34,7 +34,7 @@ export interface QuizFile {
 // Component Props
 export interface QuizAnswersProps {
     answers: Answer[];
-    selectedValue: string;
+    selectedValue: string | null;
     onAnswerSelect: (value: string) => void;
 }
 
@@ -51,7 +51,7 @@ export interface QuizHeaderProps {
 
 export interface QuizContentProps {
     answers: Answer[];
-    selectedAnswer: string;
+    selectedAnswer: string | null;
     onAnswerSelect: (value: string) => void;
     onPrevious: () => void;
     onNext: () => void;
@@ -107,7 +107,7 @@ export interface UseQuizFilesProps {
 export interface UseQuizPlaybackResult {
     currentQuestionIndex: number;
     userAnswers: UserAnswer[];
-    selectedAnswer: string;
+    selectedAnswer: string | null;
     currentQuestion: {
         id: number;
         question: string;
@@ -163,5 +163,3 @@ export interface QuizHandlers {
 }
 
 export type QuizContextType = QuizContextState & QuizDialogState & QuizHandlers;
-
-
