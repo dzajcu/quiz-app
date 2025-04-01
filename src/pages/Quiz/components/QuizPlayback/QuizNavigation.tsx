@@ -1,28 +1,44 @@
 import { Button } from "@/components/ui/button";
-import { QuizNavigationProps } from "@/types/quiz";
+
+interface QuizNavigationProps {
+    onPrevious: () => void;
+    onNext: () => void;
+    onFinish: () => void;
+    isFirstQuestion: boolean;
+    isLastQuestion: boolean;
+}
 
 const QuizNavigation = ({
     onPrevious,
     onNext,
+    onFinish,
     isFirstQuestion,
     isLastQuestion,
 }: QuizNavigationProps) => {
     return (
-        <div className="flex m-auto gap-6">
+        <div className="flex m-auto gap-6 mt-8">
             <Button
-                variant={"outline"}
-                className="px-6 py-2 w-24"
+                variant="outline"
                 onClick={onPrevious}
                 disabled={isFirstQuestion}
             >
                 Previous
             </Button>
-            <Button
-                className="px-6 py-2 w-24"
-                onClick={onNext}
-            >
-                {isLastQuestion ? "Finish" : "Next"}
-            </Button>
+            {isLastQuestion ? (
+                <Button
+                    className="px-6 py-2 w-24"
+                    onClick={onFinish}
+                >
+                    Finish Quiz
+                </Button>
+            ) : (
+                <Button
+                    className="px-6 py-2 w-24"
+                    onClick={onNext}
+                >
+                    Next
+                </Button>
+            )}
         </div>
     );
 };

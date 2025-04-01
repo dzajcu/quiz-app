@@ -111,12 +111,22 @@ export interface UseQuizPlaybackResult {
     currentQuestion: {
         id: number;
         question: string;
-        answers: Answer[];
+        answers: Array<{
+            id: string;
+            text: string;
+            isCorrect: boolean;
+        }>;
     };
     handleAnswerSelect: (value: string) => void;
     handleNextQuestion: () => void;
     handlePreviousQuestion: () => void;
     isLastQuestion: boolean;
+    isQuizFinished: boolean;
+    quizResults: {
+        correct: number;
+        total: number;
+    };
+    handleFinishQuiz: () => void;
 }
 
 // Context types

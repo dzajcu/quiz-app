@@ -33,6 +33,10 @@ const Quiz = () => {
         handleNextQuestion,
         handlePreviousQuestion,
         isLastQuestion,
+        isQuizFinished,
+        quizResults,
+        handleFinishQuiz,
+        resetQuiz,
     } = useQuizPlayback(
         quiz
             ? {
@@ -91,6 +95,10 @@ const Quiz = () => {
             onNext={handleNextQuestion}
             isFirstQuestion={isFirstQuestion}
             isLastQuestion={isLastQuestion}
+            onFinish={handleFinishQuiz}
+            isQuizFinished={isQuizFinished}
+            quizResults={quizResults}
+            onReset={resetQuiz}
         />
     );
 

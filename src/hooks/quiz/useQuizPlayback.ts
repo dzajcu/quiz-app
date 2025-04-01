@@ -23,6 +23,8 @@ export const useQuizPlayback = (
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+    const [isQuizFinished, setIsQuizFinished] = useState(false);
+    const [quizResults, setQuizResults] = useState({ correct: 0, total: 0 });
 
     const currentQuestion = questions[currentQuestionIndex] || {
         id: 0,
@@ -51,20 +53,7 @@ export const useQuizPlayback = (
             );
             setSelectedAnswer(nextAnswer?.answerId || null);
         } else {
-            // Quiz completed - calculate results
-            const correctAnswers = userAnswers.filter((answer) => {
-                const question = questions.find((q) => q.id === answer.questionId);
-                const selectedAnswer = question?.answers.find(
-                    (a) => a.id === answer.answerId
-                );
-                return selectedAnswer?.isCorrect;
-            }).length;
-
-            console.log("Quiz completed!");
-            console.log(
-                `Correct answers: ${correctAnswers} out of ${questions.length}`
-            );
-            console.log("User answers:", userAnswers);
+            handleFinishQuiz();
         }
     };
 
@@ -78,6 +67,30 @@ export const useQuizPlayback = (
         }
     };
 
+    const handleFinishQuiz = () => {
+        const correctCount = userAnswers.filter((answer) => {
+            const question = questions.find((q) => q.id === answer.questionId);
+            const selectedAnswer = question?.answers.find(
+                (a) => a.id === answer.answerId
+            );
+            return selectedAnswer?.isCorrect;
+        }).length;
+
+        setQuizResults({
+            correct: correctCount,
+            total: questions.length,
+        });
+        setIsQuizFinished(true);
+    };
+
+    const resetQuiz = () => {
+        setCurrentQuestionIndex(initialIndex);
+        setUserAnswers([]);
+        setSelectedAnswer(null);
+        setIsQuizFinished(false);
+        setQuizResults({ correct: 0, total: 0 });
+    };
+
     return {
         currentQuestionIndex,
         userAnswers,
@@ -87,5 +100,9 @@ export const useQuizPlayback = (
         handleNextQuestion,
         handlePreviousQuestion,
         isLastQuestion,
+        isQuizFinished,
+        quizResults,
+        handleFinishQuiz,
+        resetQuiz,
     };
 };
