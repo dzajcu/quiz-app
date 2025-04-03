@@ -10,7 +10,7 @@ const QuizLayout = ({ leftSection, rightSection, sectionPadding, isWrapper=true 
                 position="left"
             />
             <div className={`flex h-screen ${isWrapper ? "max-w-screen-2xl" : ""} m-auto max-lg:flex-col w-full`}>
-                <div className={`flex flex-1 justify-between flex-col p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[2] ${sectionPadding}`}>
+                <div className={`flex flex-1 justify-between flex-col p-14 max-xl:p-10 max-lg:p-6 max-lg:flex-[2] ${sectionPadding}`}>
                     {leftSection}
                 </div>
                 <div className="max-lg:hidden">
@@ -25,7 +25,7 @@ const QuizLayout = ({ leftSection, rightSection, sectionPadding, isWrapper=true 
                         className="bg-white h-px w-full"
                     />
                 </div>
-                <div className={`flex-1 flex flex-col h-screen p-14 max-xl:p-10 max-lg:p-8 max-lg:flex-[3] ${sectionPadding}`}>
+                <div className={`flex-1 flex flex-col h-screen p-14 max-xl:p-10 max-lg:p-6 max-lg:flex-[3] ${sectionPadding}`}>
                     {rightSection}
                 </div>
             </div>

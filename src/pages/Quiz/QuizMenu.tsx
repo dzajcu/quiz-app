@@ -1,9 +1,17 @@
 import QuizCreationButton from "./components/QuizCreation/QuizCreationButton";
 import BackgroundLayout from "../../components/BackgroundLayout";
-import QuizMenuCard from "./components/QuizMenu/QuizMenuCard";
+import QuizMenuItem from "./components/QuizMenu/QuizMenuItem";
 import quizData from "../../data/quizData.json";
 import { useState, useEffect } from "react";
 import QuizMenuOptions from "./components/QuizMenu/QuizMenuOptions";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
+import { useIsMedium } from "@/hooks/use-medium";
 
 interface Quiz {
     id: string;
@@ -38,36 +46,67 @@ const QuizMenu = () => {
         setSelectedQuiz(null);
     };
 
+    const isMedium = useIsMedium();
+
     const leftSection = (
-        <div className="flex flex-col h-full w-full overflow-auto no-scrollbar p-14">
-            <h2 className="text-2xl font-bold pb-4 text-right">Your Quizes</h2>
-            <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 justify-items-center">
-                <QuizCreationButton />
+        <div className="flex flex-col h-full py-14">
+            <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12 max-md:mb-0">
+                Your Quizes
+            </h2>
+            <Carousel
+                className="w-full max-md:max-w-screen-sm m-auto"
+                orientation={isMedium ? "horizontal" : "vertical"}
+            >
+                <CarouselContent className="max-h-[62vh] max-w-[100vw]">
                 {quizzes.map((quiz) => (
-                    <QuizMenuCard
-                        key={quiz.id}
-                        id={quiz.id}
-                        title={quiz.title}
-                        description={`${quiz.questions.length} questions`}
-                        onQuizSelect={handleQuizSelect}
-                    />
-                ))}
-            </div>
+                        <CarouselItem
+                            className="justify-items-center basis-1/2"
+                            key={quiz.id}
+                        >
+                            <QuizMenuItem
+                                key={quiz.id}
+                                id={quiz.id}
+                                title={quiz.title}
+                                description={`${quiz.questions.length} questions`}
+                                onQuizSelect={handleQuizSelect}
+                            />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="max-lg:hidden" />
+                <CarouselNext className="max-lg:hidden" />
+            </Carousel>
         </div>
     );
 
     const rightSection = (
-        <div className="flex flex-col h-full w-full overflow-auto no-scrollbar p-14">
-            <h2 className="text-2xl font-bold pb-4">Popular Quizzes</h2>
-            <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 justify-items-center">
-                {quizzes.map((quiz) => (
-                    <QuizMenuCard
-                        key={quiz.id}
-                        title={quiz.title}
-                        description={`${quiz.questions.length} questions`}
-                    />
-                ))}
-            </div>
+        <div className="flex flex-col h-full py-14">
+            <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12 max-md:mb-0">
+                Popular Quizzes
+            </h2>
+            <Carousel
+                className="w-full max-md:max-w-screen-sm m-auto"
+                orientation={isMedium ? "horizontal" : "vertical"}
+            >
+                <CarouselContent className="max-h-[62vh] max-w-[100vw]">
+                    {quizzes.map((quiz) => (
+                        <CarouselItem
+                            className="justify-items-center basis-1/2"
+                            key={quiz.id}
+                        >
+                            <QuizMenuItem
+                                key={quiz.id}
+                                id={quiz.id}
+                                title={quiz.title}
+                                description={`${quiz.questions.length} questions`}
+                                onQuizSelect={handleQuizSelect}
+                            />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="max-lg:hidden" />
+                <CarouselNext className="max-lg:hidden" />
+            </Carousel>
         </div>
     );
 

@@ -3,7 +3,7 @@ import {
     CardHeader,
     CardTitle,
     CardContent,
-    CardFooter,
+
 } from "@/components/ui/card";
 import { Rainbow } from "lucide-react";
 
@@ -22,18 +22,17 @@ const QuizMenuCard = ({
 }: QuizMenuCardProps) => {
     return (
         <Card
-            className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary-button overflow-hidden border-none hover:brightness-110 transition-all cursor-pointer"
+            className="p-4 lg:w-4/6 relative flex items-center bg-primary-button overflow-hidden border-none hover:brightness-110 transition-all cursor-pointer select-none"
             onClick={() => onQuizSelect && id && onQuizSelect(title, id)}
         >
-            <CardHeader className="py-0">
-                <Rainbow className="inline-block mr-2 size-16 text-white" />
+            <CardHeader className="p-0">
+                <Rainbow className="inline-block size-10 text-white" />
             </CardHeader>
-            <CardContent className="py-2">
+            <CardContent className="ml-10 mr-24 flex p-0 items-center justify-between w-full">
                 <CardTitle className="text-xl text-white">{title}</CardTitle>
+                <p className="text-xs text-white italic">{description}</p>
             </CardContent>
-            <CardFooter className="py-2 text-sm text-white">
-                {description}
-            </CardFooter>
+            
             <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-22px] bottom-[-40px]"></div>
             <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-60px] top-[-30px]"></div>
         </Card>
