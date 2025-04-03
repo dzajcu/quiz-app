@@ -29,7 +29,7 @@ const QuizNavigation = ({
                     className="px-6 py-2 w-24"
                     onClick={onFinish}
                 >
-                    Finish Quiz
+                    Finish
                 </Button>
             ) : (
                 <Button

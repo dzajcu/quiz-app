@@ -127,6 +127,7 @@ export interface UseQuizPlaybackResult {
         total: number;
     };
     handleFinishQuiz: () => void;
+    resetQuiz: () => void;
 }
 
 // Context types

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import confetti from "canvas-confetti";
+import trophyImage from "@/assets/trophy-summary.png";
 
 interface QuizSummaryProps {
     isOpen: boolean;
@@ -26,19 +27,17 @@ const QuizSummary = ({
     const navigate = useNavigate();
     const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
 
-    // Reset confetti state when dialog closes
     useEffect(() => {
         if (!isOpen) {
             setHasTriggeredConfetti(false);
         }
     }, [isOpen]);
 
-    // Trigger confetti when dialog opens
     useEffect(() => {
         if (isOpen && !hasTriggeredConfetti) {
             confetti({
                 particleCount: 100,
-                spread: 70,
+                spread: 100,
                 origin: { y: 0.6 },
                 colors: ["#4CAF50", "#2196F3", "#FFC107", "#E91E63"],
             });
@@ -51,7 +50,7 @@ const QuizSummary = ({
     };
 
     const handleReset = () => {
-        setHasTriggeredConfetti(false); // Reset confetti state
+        setHasTriggeredConfetti(false);
         onReset();
     };
 
@@ -60,18 +59,24 @@ const QuizSummary = ({
     return (
         <Dialog
             open={isOpen}
-            onOpenChange={() => {}} // prevents closing when clicking outside
+            onOpenChange={() => {}}
         >
             <DialogContent
                 className="sm:max-w-md"
-                onInteractOutside={(e) => e.preventDefault()} // prevents interaction with background
-                onEscapeKeyDown={(e) => e.preventDefault()} // prevents closing with Esc key
+                onInteractOutside={(e) => e.preventDefault()}
+                onEscapeKeyDown={(e) => e.preventDefault()}
             >
                 <DialogHeader>
                     <DialogTitle className="text-2xl mb-4">
                         Quiz Completed!
                     </DialogTitle>
                 </DialogHeader>
+                    <div className="m-auto my-2 h-32 w-32 flex items-center justify-center rounded-full bg-green-100 dark:bg-cyan-950">
+                        <img
+                            src={trophyImage}
+                            alt="Trophy summary"
+                        />
+                    </div>
                 <div className="py-6 text-center">
                     <p className="text-5xl font-bold mb-2">
                         {correctAnswers}/{totalQuestions}
@@ -92,7 +97,7 @@ const QuizSummary = ({
                     </Button>
                     <Button
                         variant="outline"
-                        onClick={handleReset} // Use our new handler
+                        onClick={handleReset}
                         className="w-full"
                     >
                         Try Again
