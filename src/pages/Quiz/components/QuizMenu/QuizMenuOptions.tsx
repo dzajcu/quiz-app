@@ -41,7 +41,7 @@ const QuizMenuOptions = ({
                     Are you ready to start{" "}
                     <span className="font-bold">{quizTitle}</span>?
                 </div>
-                <DialogFooter>
+                <DialogFooter className="max-md:gap-2">
                     <Button
                         variant="outline"
                         onClick={onClose}
