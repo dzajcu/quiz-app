@@ -24,7 +24,7 @@ const QuizExitDialog = ({ isOpen, onClose, onConfirm }: QuizExitDialogProps) => 
                     <DialogTitle>Exit Quiz</DialogTitle>
                 </DialogHeader>
                 <div>Are you sure you want to exit? Your progress will be lost.</div>
-                <DialogFooter>
+                <DialogFooter className="max-md:gap-2">
                     <Button
                         variant="outline"
                         onClick={onClose}

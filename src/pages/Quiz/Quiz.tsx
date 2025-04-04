@@ -106,6 +106,7 @@ const Quiz = () => {
         <BackgroundLayout
             leftSection={leftSection}
             rightSection={rightSection}
+            isEven={false}
         />
     );
 };

@@ -50,17 +50,17 @@ const QuizMenu = () => {
 
     const leftSection = (
         <div className="flex flex-col h-full py-14">
-            <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12 max-md:mb-0">
-                Your Quizes
+            <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12">
+                Your Quizzes
             </h2>
             <Carousel
-                className="w-full max-md:max-w-screen-sm m-auto"
+                className="w-full max-md:max-w-screen-sm justify-center lg:m-auto"
                 orientation={isMedium ? "horizontal" : "vertical"}
             >
-                <CarouselContent className="max-h-[62vh] max-w-[100vw]">
-                {quizzes.map((quiz) => (
+                <CarouselContent className="max-h-[62vh] lg:max-w-lg max-lg:max-w-[100vw] m-auto">
+                    {quizzes.map((quiz) => (
                         <CarouselItem
-                            className="justify-items-center basis-1/2"
+                            className="basis-1/2"
                             key={quiz.id}
                         >
                             <QuizMenuItem
@@ -81,17 +81,17 @@ const QuizMenu = () => {
 
     const rightSection = (
         <div className="flex flex-col h-full py-14">
-            <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12 max-md:mb-0">
+            <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12">
                 Popular Quizzes
             </h2>
             <Carousel
-                className="w-full max-md:max-w-screen-sm m-auto"
+                className="w-full max-md:max-w-screen-sm justify-center lg:m-auto"
                 orientation={isMedium ? "horizontal" : "vertical"}
             >
-                <CarouselContent className="max-h-[62vh] max-w-[100vw]">
+                <CarouselContent className="max-h-[62vh] lg:max-w-lg max-lg:max-w-[100vw] m-auto">
                     {quizzes.map((quiz) => (
                         <CarouselItem
-                            className="justify-items-center basis-1/2"
+                            className="basis-1/2"
                             key={quiz.id}
                         >
                             <QuizMenuItem
@@ -115,7 +115,6 @@ const QuizMenu = () => {
             <BackgroundLayout
                 leftSection={leftSection}
                 rightSection={rightSection}
-                sectionPadding="p-[0]"
                 isWrapper={false}
             />
             {selectedQuiz && (
