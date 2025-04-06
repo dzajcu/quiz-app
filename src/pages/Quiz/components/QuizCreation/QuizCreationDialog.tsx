@@ -11,6 +11,8 @@ const QuizCreationDialog = () => {
         handleCloseQuizDialog,
         quizTitle,
         setQuizTitle,
+        quizDescription,
+        setQuizDescription,
         questions,
         handleAddQuestion,
         handleDeleteQuestion,
@@ -46,6 +48,23 @@ const QuizCreationDialog = () => {
                                 autoFocus
                             />
                         </div>
+                    </div>
+                    <div className="flex items-start gap-2 flex-1 pl-4">
+                        <textarea
+                            value={quizDescription}
+                            onChange={(e) => setQuizDescription(e.target.value)}
+                            placeholder="Quiz description..."
+                            className="text-sm bg-transparent focus:outline-none focus:ring-0 resize-none overflow-hidden flex h-9 w-full rounded-none border-0 border-b px-3 py-1 shadow-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-b-2 focus-visible:border-primary-button border-muted disabled:cursor-not-allowed disabled:opacity-50"
+                            style={{
+                                height: "28px",
+                                minHeight: "28px",
+                            }}
+                            onInput={(e) => {
+                                const target = e.target as HTMLTextAreaElement;
+                                target.style.height = "28px";
+                                target.style.height = `${target.scrollHeight}px`;
+                            }}
+                        />
                     </div>
                 </DialogHeader>
                 <QuizQuestionList

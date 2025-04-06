@@ -20,9 +20,9 @@ export const useQuizDraft = () => {
         }
     }, []);
 
-    const saveDraft = useCallback((questions: Question[], title: string) => {
+    const saveDraft = useCallback((questions: Question[], title: string, description: string) => {
         try {
-            localStorage.setItem("quizDraft", JSON.stringify({ title, questions }));
+            localStorage.setItem("quizDraft", JSON.stringify({ title, questions, description }));
             setHasDraft(true);
             toast.success("Draft Saved", {
                 description: "Your quiz draft has been saved.",

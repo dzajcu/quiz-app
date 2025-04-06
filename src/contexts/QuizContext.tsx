@@ -15,6 +15,8 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setQuestions,
         quizTitle,
         setQuizTitle,
+        quizDescription,
+        setQuizDescription,
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,
@@ -27,9 +29,10 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const hasUnsavedChanges = useCallback(() => {
         return (
             questions.some((q) => q.question || q.answers.some((a) => a)) ||
-            quizTitle.trim() !== ""
+            quizTitle.trim() !== "" ||
+            quizDescription.trim() !== ""
         );
-    }, [questions, quizTitle]);
+    }, [questions, quizTitle, quizDescription]);
 
     const {
         isQuizDialogOpen,
@@ -49,6 +52,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { handleFileSelect, handleManualCreate } = useQuizFiles({
         setQuestions,
         setQuizTitle,
+        setQuizDescription,
         closeCreateMethodDialog,
         openQuizDialog,
     });
@@ -73,7 +77,13 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         const formattedQuestions = questions.map((q, qIndex) => ({
-            id: quizData.questions.length + qIndex + 1,
+            id:
+                quizData.quizzes.reduce(
+                    (acc, quiz) => acc + quiz.questions.length,
+                    0
+                ) +
+                qIndex +
+                1,
             question: q.question,
             answers: q.answers.map((text, index) => ({
                 id: String.fromCharCode(97 + index),
@@ -93,9 +103,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, [questions, clearDraft, resetQuiz, closeQuizDialog]);
 
     const handleSaveDraft = useCallback(() => {
-        saveDraft(questions, quizTitle);
+        saveDraft(questions, quizTitle, quizDescription);
         closeQuizDialog();
-    }, [questions, quizTitle, saveDraft, closeQuizDialog]);
+    }, [questions, quizTitle, saveDraft, closeQuizDialog, quizDescription]);
 
     const handleDiscardDraft = useCallback(() => {
         clearDraft();
@@ -108,6 +118,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const draft = loadDraft();
             if (draft) {
                 setQuestions(draft.questions || []);
+                setQuizDescription(draft.description || "");
                 setQuizTitle(draft.title || "");
                 openQuizDialog();
             } else {
@@ -121,6 +132,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         loadDraft,
         setQuestions,
         setQuizTitle,
+        setQuizDescription,
         openQuizDialog,
         openCreateMethodDialog,
     ]);
@@ -130,6 +142,8 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         questions,
         quizTitle,
         setQuizTitle,
+        quizDescription,
+        setQuizDescription,
         hasDraft,
 
         // Dialog states

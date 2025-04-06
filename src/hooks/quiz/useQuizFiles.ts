@@ -5,11 +5,12 @@ import { toast } from "sonner";
 export const useQuizFiles = ({
     setQuestions,
     setQuizTitle,
+    setQuizDescription,
     closeCreateMethodDialog,
     openQuizDialog,
 }: UseQuizFilesProps) => {
     const parseTxtFile = useCallback(
-        (content: string): { title: string; questions: Question[] } => {
+        (content: string): { title: string; description: string; questions: Question[] } => {
             try {
                 const parts = content
                     .split(";")
@@ -22,7 +23,8 @@ export const useQuizFiles = ({
                 }
 
                 const title = parts[0] || "New Quiz";
-                const questions = parts.slice(1);
+                const description = parts[1] || "";
+                const questions = parts.slice(2);
 
                 const parsedQuestions = questions.map((questionStr) => {
                     const parts = questionStr.split(",").map((p) => p.trim());
@@ -56,6 +58,7 @@ export const useQuizFiles = ({
 
                 return {
                     title,
+                    description,
                     questions: parsedQuestions,
                 };
             } catch (error) {
@@ -70,10 +73,11 @@ export const useQuizFiles = ({
     );
 
     const parseJsonFile = useCallback(
-        (content: QuizFile): { title: string; questions: Question[] } => {
+        (content: QuizFile): { title: string; description: string; questions: Question[] } => {
             try {
                 return {
                     title: content.title || "New Quiz",
+                    description: content.description || "",
                     questions: content.questions.map((q) => ({
                         question: q.question,
                         answers: q.answers.map((a) => a.text),
@@ -121,7 +125,7 @@ export const useQuizFiles = ({
 
                     setQuestions(mappedQuestions);
                     setQuizTitle(parsedData.title);
-
+                    setQuizDescription(parsedData.description || "");
                     closeCreateMethodDialog();
                     openQuizDialog();
 

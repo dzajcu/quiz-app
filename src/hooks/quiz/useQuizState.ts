@@ -4,7 +4,7 @@ import { Question } from "@/types/quiz";
 export const useQuizState = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [quizTitle, setQuizTitle] = useState<string>("");
-
+    const [quizDescription, setQuizDescription] = useState<string>("");
     const handleAddQuestion = useCallback(() => {
         setQuestions((prev) => [
             ...prev,
@@ -44,6 +44,7 @@ export const useQuizState = () => {
     const resetQuiz = useCallback(() => {
         setQuestions([]);
         setQuizTitle("");
+        setQuizDescription("");
     }, []);
 
     return {
@@ -51,6 +52,8 @@ export const useQuizState = () => {
         setQuestions,
         quizTitle,
         setQuizTitle,
+        quizDescription,
+        setQuizDescription,
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,

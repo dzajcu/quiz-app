@@ -24,6 +24,7 @@ export interface Question {
 
 export interface QuizFile {
     title: string;
+    description: string;
     questions: {
         id: number;
         question: string;
@@ -100,6 +101,7 @@ export interface QuestionListProps {
 export interface UseQuizFilesProps {
     setQuestions: (questions: Question[]) => void;
     setQuizTitle: (title: string) => void;
+    setQuizDescription: (description: string) => void;
     closeCreateMethodDialog: () => void;
     openQuizDialog: () => void;
 }
@@ -135,6 +137,8 @@ export interface QuizContextState {
     questions: Question[];
     quizTitle: string;
     setQuizTitle: React.Dispatch<React.SetStateAction<string>>;
+    quizDescription: string;
+    setQuizDescription: React.Dispatch<React.SetStateAction<string>>;
     hasDraft: boolean;
 }
 
