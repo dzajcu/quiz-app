@@ -10,7 +10,9 @@ export const useQuizFiles = ({
     openQuizDialog,
 }: UseQuizFilesProps) => {
     const parseTxtFile = useCallback(
-        (content: string): { title: string; description: string; questions: Question[] } => {
+        (
+            content: string
+        ): { title: string; description: string; questions: Question[] } => {
             try {
                 const parts = content
                     .split(";")
@@ -73,7 +75,9 @@ export const useQuizFiles = ({
     );
 
     const parseJsonFile = useCallback(
-        (content: QuizFile): { title: string; description: string; questions: Question[] } => {
+        (
+            content: QuizFile
+        ): { title: string; description: string; questions: Question[] } => {
             try {
                 return {
                     title: content.title || "New Quiz",
@@ -101,7 +105,11 @@ export const useQuizFiles = ({
             reader.onload = (e) => {
                 try {
                     const content = e.target?.result as string;
-                    let parsedData: { title: string; questions: Question[] };
+                    let parsedData: {
+                        title: string;
+                        description: string;
+                        questions: Question[];
+                    };
 
                     if (file.name.toLowerCase().endsWith(".json")) {
                         const jsonContent = JSON.parse(content) as QuizFile;
@@ -141,7 +149,15 @@ export const useQuizFiles = ({
             };
             reader.readAsText(file);
         },
-        [parseTxtFile, parseJsonFile, closeCreateMethodDialog, openQuizDialog]
+        [
+            parseTxtFile,
+            setQuestions,
+            setQuizDescription,
+            setQuizTitle,
+            parseJsonFile,
+            closeCreateMethodDialog,
+            openQuizDialog,
+        ]
     );
 
     const handleManualCreate = useCallback(
@@ -156,7 +172,7 @@ export const useQuizFiles = ({
             closeCreateMethodDialog();
             openQuizDialog();
         },
-        [closeCreateMethodDialog, openQuizDialog]
+        [closeCreateMethodDialog, openQuizDialog, setQuestions]
     );
 
     return {
