@@ -49,16 +49,16 @@ const QuizMenu = () => {
     const isMedium = useIsMedium();
 
     const leftSection = (
-        <div className="flex flex-col h-full py-14">
+        <div className="flex flex-col h-full md:py-14">
             <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12">
                 Your Quizzes
             </h2>
             {/* <QuizCreationButton/> */}
             <Carousel
-                className="w-full max-md:max-w-screen-sm justify-center lg:m-auto"
+                className="w-full justify-center lg:m-auto"
                 orientation={isMedium ? "horizontal" : "vertical"}
             >
-                <CarouselContent className="max-h-[62vh] lg:max-w-lg max-lg:max-w-[100vw] m-auto">
+                <CarouselContent className="max-h-[62vh] lg:max-w-lg lg:m-auto">
                     {quizzes.map((quiz) => (
                         <CarouselItem
                             className="basis-1/2"
@@ -81,15 +81,15 @@ const QuizMenu = () => {
     );
 
     const rightSection = (
-        <div className="flex flex-col h-full py-14">
+        <div className="flex flex-col h-full md:py-14">
             <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12">
                 Popular Quizzes
             </h2>
             <Carousel
-                className="w-full max-md:max-w-screen-sm justify-center lg:m-auto"
+                className="w-full justify-center lg:m-auto"
                 orientation={isMedium ? "horizontal" : "vertical"}
             >
-                <CarouselContent className="max-h-[62vh] lg:max-w-lg max-lg:max-w-[100vw] m-auto">
+                <CarouselContent className="max-h-[62vh] lg:max-w-lg lg:m-auto">
                     {quizzes.map((quiz) => (
                         <CarouselItem
                             className="basis-1/2"

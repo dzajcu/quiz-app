@@ -78,11 +78,7 @@ const Quiz = () => {
                 totalQuestions={quiz.questions.length}
                 questionText={currentQuestion.question}
             />
-            <img
-                className="max-lg:hidden"
-                src="./asd"
-                alt="Logo"
-            />
+
         </>
     );
 

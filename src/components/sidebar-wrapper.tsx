@@ -12,13 +12,13 @@ export default function SidebarWrapper({ children }: { children: ReactNode }) {
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>{children}</SidebarInset>
-            <header className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full h-16 px-4 bg-background border-b">
+            <header className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full h-16 px-4 bg-background border-b ">
                 <div className="flex justify-between items-center w-full h-full">
                     <img
                         src="./asd"
                         alt="Logo"
                     />
-                    <SidebarTrigger className="-ml-1">
+                    <SidebarTrigger >
                         <Menu />
                     </SidebarTrigger>
                 </div>
