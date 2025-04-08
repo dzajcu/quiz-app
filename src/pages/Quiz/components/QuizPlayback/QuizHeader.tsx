@@ -1,5 +1,4 @@
-import { ArrowLeft, Menu } from "lucide-react";
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { ArrowLeft } from "lucide-react";
 import { QuizHeaderProps } from "@/types/quiz";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,6 @@ const QuizHeader = ({
     totalQuestions,
     questionText,
 }: QuizHeaderProps) => {
-    const { isMobile } = useSidebar();
     const navigate = useNavigate();
     const [isExitDialogOpen, setIsExitDialogOpen] = useState(false);
 
@@ -35,13 +33,6 @@ const QuizHeader = ({
                         Return
                     </p>
                 </div>
-                {isMobile ? (
-                    <SidebarTrigger>
-                        <Menu />
-                    </SidebarTrigger>
-                ) : (
-                    ""
-                )}
             </div>
             <div className="font-bold">
                 <p className="mb-4 text-xl text-primary-muted">

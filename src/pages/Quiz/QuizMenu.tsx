@@ -53,7 +53,7 @@ const QuizMenu = () => {
             <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12">
                 Your Quizzes
             </h2>
-            <QuizCreationButton/>
+            {/* <QuizCreationButton/> */}
             <Carousel
                 className="w-full max-md:max-w-screen-sm justify-center lg:m-auto"
                 orientation={isMedium ? "horizontal" : "vertical"}
