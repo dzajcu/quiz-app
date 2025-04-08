@@ -5,6 +5,8 @@ import QuizMenu from "./pages/Quiz/QuizMenu.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import { QuizProvider } from "@/contexts/QuizContext";
+import LoginForm from "./pages/authentication/loginForm.tsx";
+import RegisterForm from "./pages/authentication/registerForm.tsx";
 
 const router = createBrowserRouter([
     {
@@ -19,12 +21,40 @@ const router = createBrowserRouter([
                 storageKey="vite-ui-theme"
             >
                 <Toaster richColors />
-                <SidebarWrapper>
-                    <Navigate
-                        to="/quiz"
-                        replace
-                    />
-                </SidebarWrapper>
+                <Navigate
+                    to="/login"
+                    replace
+                />
+            </ThemeProvider>
+        ),
+    },
+    {
+        path: "/login",
+        element: (
+            <ThemeProvider
+                defaultTheme={
+                    window.matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "dark"
+                        : "light"
+                }
+                storageKey="vite-ui-theme"
+            >
+                <LoginForm />
+            </ThemeProvider>
+        ),
+    },
+    {
+        path: "/register",
+        element: (
+            <ThemeProvider
+                defaultTheme={
+                    window.matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "dark"
+                        : "light"
+                }
+                storageKey="vite-ui-theme"
+            >
+                <RegisterForm />
             </ThemeProvider>
         ),
     },
