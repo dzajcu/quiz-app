@@ -61,7 +61,7 @@ const useIconsData = () => {
     const loadIcons = async () => {
       setIsLoading(true);
 
-      const { iconsData } = await import('./icons-data');
+      const { iconsData } = await import('@/lib/icons-data');
       if (isMounted) {
         setIcons(iconsData);
         setIsLoading(false);
