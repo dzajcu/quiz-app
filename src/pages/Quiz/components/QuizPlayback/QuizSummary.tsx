@@ -59,12 +59,10 @@ const QuizSummary = ({
     return (
         <Dialog
             open={isOpen}
-            onOpenChange={() => {}}
         >
             <DialogContent
                 className="sm:max-w-md"
-                onInteractOutside={(e) => e.preventDefault()}
-                onEscapeKeyDown={(e) => e.preventDefault()}
+                isClosable={false}
             >
                 <DialogHeader>
                     <DialogTitle className="text-2xl mb-4">
