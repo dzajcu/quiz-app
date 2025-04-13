@@ -4,6 +4,8 @@ import { InputQuiz } from "@/components/ui/input-quiz";
 import { Save, ArrowLeft, Plus } from "lucide-react";
 import QuizQuestionList from "./QuizCreationQuestionList";
 import { useQuiz } from "@/contexts/QuizContext";
+import { IconPicker, IconName, Icon } from "@/components/ui/icon-picker";
+import { useState } from "react";
 
 const QuizCreationDialog = () => {
     const {
@@ -22,13 +24,15 @@ const QuizCreationDialog = () => {
         handleBackToMethodSelect,
     } = useQuiz();
 
+    const [icon, setIcon] = useState<IconName | undefined>(undefined);
+
     return (
         <Dialog
             open={isQuizDialogOpen}
             onOpenChange={handleCloseQuizDialog}
         >
-            <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader className="space-y-4">
+            <DialogContent className="max-w-3xl max-h-[80vh] overflow-visible">
+                <DialogHeader className="space-y-4 ">
                     <div className="flex items-center gap-4">
                         <Button
                             variant="ghost"
@@ -48,6 +52,16 @@ const QuizCreationDialog = () => {
                                 autoFocus
                             />
                         </div>
+                        <IconPicker
+                            className="mr-6 p-3"
+                            value={icon}
+                            onValueChange={(icon) => setIcon(icon)}
+                            categorized={false}
+                        >
+                            <Button variant={"ghost"} className="flex items-center gap-2">
+                                {icon ? <Icon name={icon} /> : "Select Icon"}
+                            </Button>
+                        </IconPicker>
                     </div>
                     <div className="flex items-start gap-2 flex-1 pl-4">
                         <textarea
