@@ -2,15 +2,8 @@ import QuizCreationDialog from "./QuizCreationDialog";
 import { useQuiz } from "@/contexts/QuizContext";
 import QuizCreationMethodDialog from "./QuizCreationMethodDialog";
 import QuizCreationSaveDraftDialog from "./QuizCreationSaveDraftDialog";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardContent,
-    // CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
-
 const QuizCreationButton = () => {
     const { handleOpenQuizDialog } = useQuiz();
 
@@ -18,19 +11,16 @@ const QuizCreationButton = () => {
         <>
             <Card
                 onClick={handleOpenQuizDialog}
-                className="relative w-72 max-w-xs h-36 flex flex-col justify-between bg-primary-button overflow-hidden cursor-pointer"
+                className="p-4 max-lg:h-40 max-lg:min-w-52 relative flex items-center bg-primary-button overflow-hidden border-none hover:brightness-110 transition-all cursor-pointer select-none"
             >
-                <CardHeader className="py-4">
-                    <Plus className="inline-block mr-2 size-12 text-white" />
+                <CardHeader className="p-0">
+                    <Plus className="inline-block size-10 text-white" />
                 </CardHeader>
-                <CardContent className="py-4">
-                    <CardTitle className="text-xl text-white">Create New Quiz</CardTitle>
+                <CardContent className="ml-6 flex max-lg:flex-col p-0 lg:items-center justify-between w-full max-lg:gap-1">
+                    <CardTitle className="text-lg text-white">
+                        Create New Quiz
+                    </CardTitle>
                 </CardContent>
-                {/* <CardFooter className="py-2 text-sm text-white">
-                    footer
-                </CardFooter> */}
-                <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-22px] bottom-[-40px]"></div>
-                <div className="h-32 w-32 bg-white opacity-30 rounded-full absolute right-[-60px] top-[-30px]"></div>
             </Card>
             <QuizCreationMethodDialog />
             <QuizCreationDialog />

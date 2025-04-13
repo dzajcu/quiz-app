@@ -53,12 +53,15 @@ const QuizMenu = () => {
             <h2 className="text-2xl font-bold pb-4 text-center max-lg:mb-12">
                 Your Quizzes
             </h2>
-            {/* <QuizCreationButton/> */}
+            
             <Carousel
                 className="w-full justify-center lg:m-auto"
                 orientation={isMedium ? "horizontal" : "vertical"}
             >
                 <CarouselContent className="max-h-[62vh] lg:max-w-lg lg:m-auto">
+                    <CarouselItem className="basis-1/2">
+                        <QuizCreationButton />
+                    </CarouselItem>
                     {quizzes.map((quiz) => (
                         <CarouselItem
                             className="basis-1/2"
@@ -90,6 +93,7 @@ const QuizMenu = () => {
                 orientation={isMedium ? "horizontal" : "vertical"}
             >
                 <CarouselContent className="max-h-[62vh] lg:max-w-lg lg:m-auto">
+                    
                     {quizzes.map((quiz) => (
                         <CarouselItem
                             className="basis-1/2"
