@@ -52,10 +52,10 @@ const QuizCreationDialog = () => {
                             />
                         </div>
                         <IconPicker
-                            className={`mr-6 ${quizIcon ? "h-10 w-10" : ""}`}
+                            className={`p-2 mr-6 ${quizIcon ? "h-10 w-10" : ""}`}
                             value={quizIcon}
                             onValueChange={(icon) => setQuizIcon(icon)}
-                            categorized={false}
+                            searchable={false}
                         >
                             <Button
                                 variant={"ghost"}

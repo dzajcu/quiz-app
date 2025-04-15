@@ -6,7 +6,7 @@ import { useQuizFiles } from "@/hooks/quiz/useQuizFiles";
 import quizData from "@/data/quizData.json";
 import { toast } from "sonner";
 import { QuizContextType } from "@/types/quiz";
-import { IconName } from "@/components/ui/icon-picker";
+
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 

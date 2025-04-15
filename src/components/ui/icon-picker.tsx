@@ -14,6 +14,7 @@ import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
 import { Skeleton } from "@/components/ui/skeleton";
 import Fuse from 'fuse.js';
 import { useDebounceValue } from "usehooks-ts";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export type IconData = typeof iconsData[number];
 
@@ -40,12 +41,10 @@ const IconsColumnSkeleton = () => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <Skeleton className="h-4 w-1/2 rounded-md" />
-      <div className="grid grid-cols-5 gap-2 w-full">
-        {
-          Array.from({ length: 40 }).map((_, i) => (
+      <div className="grid grid-cols-7 gap-2 w-full">
+        {Array.from({ length: 42 }).map((_, i) => (
           <Skeleton key={i} className="h-10 w-10 rounded-md" />
-        ))
-      }
+        ))}
       </div>
     </div>
   )
@@ -96,6 +95,7 @@ const IconPicker = React.forwardRef<
   categorized = true,
   ...props
 }, ref) => {
+  const isMobile = useIsMobile();
   const [selectedIcon, setSelectedIcon] = useState<IconName | undefined>(defaultValue)
   const [isOpen, setIsOpen] = useState(defaultOpen || false)
   const [search, setSearch] = useDebounceValue("", 100);
@@ -164,10 +164,9 @@ const IconPicker = React.forwardRef<
       items.push({ type: 'category', categoryIndex });
       
       const rows = [];
-      for (let i = 0; i < category.icons.length; i += 5) {
-        rows.push(category.icons.slice(i, i + 5));
+      for (let i = 0; i < category.icons.length; i += 7) {
+        rows.push(category.icons.slice(i, i + 7));
       }
-      
       
       rows.forEach((rowIcons, rowIndex) => {
         items.push({ 
@@ -227,13 +226,13 @@ const IconPicker = React.forwardRef<
         setIsLoading(false);
       }, 1);
     }
-  }, [open, onOpenChange, virtualizer]);
+  }, [open, onOpenChange, virtualizer, setSearch]);
 
   const handleIconClick = useCallback((iconName: IconName) => {
     handleValueChange(iconName);
     setIsOpen(false);
     setSearch("");
-  }, [handleValueChange]);
+  }, [handleValueChange, setSearch]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -243,7 +242,7 @@ const IconPicker = React.forwardRef<
     }
     
     virtualizer.scrollToOffset(0);
-  }, [virtualizer]);
+  }, [virtualizer, setSearch]);
 
   const scrollToCategory = useCallback((categoryName: string) => {
     const categoryIndex = categoryIndices[categoryName];
@@ -344,7 +343,7 @@ const IconPicker = React.forwardRef<
               data-index={virtualItem.index}
               style={itemStyle}
             >
-              <div className="grid grid-cols-5 gap-2 w-full">
+              <div className={cn("grid gap-2 w-full", isMobile ? "grid-cols-7" : "grid-cols-7")}>
                 {item.icons!.map(renderIcon)}
               </div>
             </div>
@@ -352,7 +351,7 @@ const IconPicker = React.forwardRef<
         })}
       </div>
     );
-  }, [virtualizer, virtualItems, categorizedIcons, filteredIcons, renderIcon]);
+  }, [virtualizer, virtualItems, categorizedIcons, filteredIcons, renderIcon, isMobile]);
 
   React.useEffect(() => {
     if (isPopoverVisible) {
@@ -376,9 +375,15 @@ const IconPicker = React.forwardRef<
       };
     }
   }, [isPopoverVisible, virtualizer]);
-
+  useEffect(() => {
+    return () => {
+        setTimeout(() => {
+            document.body.style.pointerEvents = '';
+        }, 0);
+    };
+}, []);
   return (
-    <Popover open={open ?? isOpen} onOpenChange={handleOpenChange}>
+    <Popover modal={true} open={open ?? isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger ref={ref} asChild {...props}>
         {children || (
           <Button variant="outline">
@@ -392,7 +397,10 @@ const IconPicker = React.forwardRef<
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-2">
+      <PopoverContent
+        onPointerDownOutside={(e) => e.stopPropagation()}
+        className={cn("p-2 pointer-events-auto", isMobile ? "w-[calc(100vw)]" : "w-96")}
+      >
         {searchable && (
           <Input
             placeholder={searchPlaceholder}
