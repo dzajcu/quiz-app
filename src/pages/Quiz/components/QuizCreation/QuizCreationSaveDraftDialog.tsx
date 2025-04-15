@@ -1,54 +1,87 @@
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useQuiz } from "@/contexts/QuizContext";
+import { Archive, Trash2 } from "lucide-react";
+import { Icon } from "@/components/ui/icon-picker";
 
-const SaveDraftDialog = () => {
+const QuizCreationSaveDraftDialog = () => {
     const {
         isSaveDraftDialogOpen,
-        setShowSaveDraftDialog,
+        handleCancelSaveDraft,
         handleSaveDraft,
         handleDiscardDraft,
-        handleCancelSaveDraft,
+        quizTitle,
+        quizDescription,
+        quizIcon,
+        questions,
     } = useQuiz();
 
+    const validQuestionCount = questions.filter(
+        (q) => q.question.trim() !== "" && q.answers.some((a) => a.trim() !== "")
+    ).length;
+
     return (
-        <AlertDialog
+        <Dialog
             open={isSaveDraftDialogOpen}
-            onOpenChange={setShowSaveDraftDialog}
+            onOpenChange={handleCancelSaveDraft}
         >
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Save Draft?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Would you like to save your quiz as a draft? You can continue
-                        editing it later.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel onClick={handleCancelSaveDraft}>
-                        Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogCancel
-                        className="bg-destructive text-destructive-foreground hover:bg-red-600 border-none hover:text-white"
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Save Draft Quiz</DialogTitle>
+                    <DialogDescription>
+                        Your progress will be saved locally. You can continue editing
+                        later.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-3">
+                    <div className="flex items-center gap-2">
+                        {quizIcon && (
+                            <Icon
+                                name={quizIcon}
+                                className="h-5 w-5"
+                            />
+                        )}
+                        <h3 className="font-medium">
+                            {quizTitle || "Untitled Quiz"}
+                        </h3>
+                    </div>
+                    {quizDescription && (
+                        <p className="text-sm text-muted-foreground">
+                            {quizDescription}
+                        </p>
+                    )}
+                    <div className="text-sm">
+                        <span className="font-medium">{validQuestionCount}</span>{" "}
+                        question{validQuestionCount !== 1 ? "s" : ""} with content
+                    </div>
+                </div>
+                <DialogFooter className="flex sm:justify-between gap-2">
+                    <Button
+                        variant="destructive"
                         onClick={handleDiscardDraft}
+                        className="w-full sm:w-auto flex-1 sm:flex-initial"
                     >
+                        <Trash2 className="h-4 w-4 mr-2" />
                         Discard
-                    </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleSaveDraft}>
+                    </Button>
+                    <Button
+                        onClick={handleSaveDraft}
+                        className="w-full sm:w-auto flex-1 sm:flex-initial"
+                    >
+                        <Archive className="h-4 w-4 mr-2" />
                         Save Draft
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };
 
-export default SaveDraftDialog;
+export default QuizCreationSaveDraftDialog;

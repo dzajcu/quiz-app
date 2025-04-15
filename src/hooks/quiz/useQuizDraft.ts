@@ -1,12 +1,22 @@
 import { useState, useCallback, useEffect } from "react";
 import { Question } from "@/types/quiz";
 import { toast } from "sonner";
+import { IconName } from "@/components/ui/icon-picker";
+
+interface QuizDraft {
+    questions: Question[];
+    title: string;
+    description: string;
+    icon?: IconName;
+}
+
+const DRAFT_KEY = "quizDraft";
 
 export const useQuizDraft = () => {
     const [hasDraft, setHasDraft] = useState<boolean>(false);
 
     useEffect(() => {
-        const savedDraft = localStorage.getItem("quizDraft");
+        const savedDraft = localStorage.getItem(DRAFT_KEY);
         if (savedDraft) {
             try {
                 JSON.parse(savedDraft); // Just validate JSON
@@ -20,26 +30,40 @@ export const useQuizDraft = () => {
         }
     }, []);
 
-    const saveDraft = useCallback((questions: Question[], title: string, description: string) => {
-        try {
-            localStorage.setItem("quizDraft", JSON.stringify({ title, questions, description }));
-            setHasDraft(true);
-            toast.success("Draft Saved", {
-                description: "Your quiz draft has been saved.",
-            });
-        } catch (error) {
-            console.error("Error saving draft:", error);
-            toast.error("Error saving draft", {
-                description: "There was an error saving your draft.",
-            });
-        }
-    }, []);
+    const saveDraft = useCallback(
+        (
+            questions: Question[],
+            title: string,
+            description: string,
+            icon?: IconName
+        ) => {
+            try {
+                const draft: QuizDraft = {
+                    questions,
+                    title,
+                    description,
+                    icon,
+                };
+                localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+                setHasDraft(true);
+                toast.success("Draft Saved", {
+                    description: "Your quiz draft has been saved.",
+                });
+            } catch (error) {
+                console.error("Error saving draft:", error);
+                toast.error("Error saving draft", {
+                    description: "There was an error saving your draft.",
+                });
+            }
+        },
+        []
+    );
 
-    const loadDraft = useCallback(() => {
-        const savedDraft = localStorage.getItem("quizDraft");
+    const loadDraft = useCallback((): QuizDraft | null => {
+        const savedDraft = localStorage.getItem(DRAFT_KEY);
         if (savedDraft) {
             try {
-                return JSON.parse(savedDraft);
+                return JSON.parse(savedDraft) as QuizDraft;
             } catch (error) {
                 console.error("Error loading draft:", error);
                 return null;
@@ -49,7 +73,7 @@ export const useQuizDraft = () => {
     }, []);
 
     const clearDraft = useCallback(() => {
-        localStorage.removeItem("quizDraft");
+        localStorage.removeItem(DRAFT_KEY);
         setHasDraft(false);
     }, []);
 

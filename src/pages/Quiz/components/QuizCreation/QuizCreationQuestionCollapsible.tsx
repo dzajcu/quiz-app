@@ -43,7 +43,7 @@ const QuestionCollapsible = ({
             onOpenChange={setIsOpen}
             className="w-full space-y-2"
         >
-            <div className="flex items-center justify-between space-x-4 px-4">
+            <div className="flex items-center justify-between space-x-4 pl-4 pr-1">
                 <div className="flex-1">
                     <InputQuiz
                         placeholder={`Question ${questionNumber}`}

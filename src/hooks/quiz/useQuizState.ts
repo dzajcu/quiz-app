@@ -1,10 +1,18 @@
 import { useState, useCallback } from "react";
-import { Question } from "@/types/quiz";
+import { QuizQuestion } from "@/types/quiz";
+import { IconName } from "@/components/ui/icon-picker";
 
 export const useQuizState = () => {
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [quizTitle, setQuizTitle] = useState<string>("");
-    const [quizDescription, setQuizDescription] = useState<string>("");
+    const [questions, setQuestions] = useState<QuizQuestion[]>([
+        {
+            question: "",
+            answers: ["", "", "", ""],
+        },
+    ]);
+    const [quizTitle, setQuizTitle] = useState("");
+    const [quizDescription, setQuizDescription] = useState("");
+    const [quizIcon, setQuizIcon] = useState<IconName | undefined>(undefined);
+
     const handleAddQuestion = useCallback(() => {
         setQuestions((prev) => [
             ...prev,
@@ -42,9 +50,15 @@ export const useQuizState = () => {
     );
 
     const resetQuiz = useCallback(() => {
-        setQuestions([]);
+        setQuestions([
+            {
+                question: "",
+                answers: ["", "", "", ""],
+            },
+        ]);
         setQuizTitle("");
         setQuizDescription("");
+        setQuizIcon(undefined);
     }, []);
 
     return {
@@ -54,6 +68,8 @@ export const useQuizState = () => {
         setQuizTitle,
         quizDescription,
         setQuizDescription,
+        quizIcon,
+        setQuizIcon,
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,

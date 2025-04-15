@@ -1,3 +1,5 @@
+import { IconName } from "@/components/ui/icon-picker";
+
 // Basic Data Types
 export interface Answer {
     id: string;
@@ -177,4 +179,9 @@ export interface QuizHandlers {
     handleManualCreate: (count: number) => void;
 }
 
-export type QuizContextType = QuizContextState & QuizDialogState & QuizHandlers;
+export type QuizContextType = QuizContextState &
+    QuizDialogState &
+    QuizHandlers & {
+        quizIcon: IconName | undefined;
+        setQuizIcon: (icon: IconName | undefined) => void;
+    };

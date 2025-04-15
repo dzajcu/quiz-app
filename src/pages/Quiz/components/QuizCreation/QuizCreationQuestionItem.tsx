@@ -11,7 +11,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
     onDelete,
 }) => {
     return (
-        <div className="flex relative ">
+        <div className="flex relative gap-0">
             <QuizCreationQuestionCollapsible
                 questionNumber={index + 1}
                 initialQuestion={question.question}
@@ -22,7 +22,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
             <Button
                 variant="ghost"
                 size="icon"
-                className="absolute -right-4 top-[2px] h-8 w-8 hover:text-red-500"
+                className="h-8 w-8 hover:text-red-500"
                 onClick={onDelete}
             >
                 <Trash2 className="h-4 w-4" />
