@@ -399,7 +399,7 @@ const IconPicker = React.forwardRef<
       </PopoverTrigger>
       <PopoverContent
         onPointerDownOutside={(e) => e.stopPropagation()}
-        className={cn("p-2 pointer-events-auto", isMobile ? "w-[calc(100vw)]" : "w-96")}
+        className={cn("p-2 pointer-events-auto", isMobile ? "w-[calc(90vw)]" : "w-96")}
       >
         {searchable && (
           <Input
