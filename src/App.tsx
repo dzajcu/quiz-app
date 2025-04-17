@@ -24,68 +24,43 @@ const router = createBrowserRouter([
             >
                 <Toaster richColors />
                 <SidebarWrapper>
-                    <div className="min-h-screen w-full p-4 md:p-8 bg-background">
-                        <AutoFillGrid
-                            minChildWidth={250}
-                            gap={24}
-                        >
-                            <HomePageCard
-                                title="Classic Quiz"
-                                description="Test your knowledge with classic quiz format"
-                                id="classic"
-                            />
-                            <HomePageCard
-                                title="Time Attack"
-                                description="Race against the clock to answer questions"
-                                id="time"
-                            />
-                            <HomePageCard
-                                title="Challenge Mode"
-                                description="Complete increasingly difficult questions"
-                                id="challenge"
-                            />
-                            <HomePageCard
-                                title="Daily Quiz"
-                                description="New questions every day"
-                                id="daily"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                            <HomePageCard
-                                title="Multiplayer"
-                                description="Compete with other players in real-time"
-                                id="multiplayer"
-                            />
-                        </AutoFillGrid>
-                    </div>
+                    <AutoFillGrid>
+                        <HomePageCard
+                            title="Classic Quiz"
+                            description="Test your knowledge with classic quiz format"
+                            id="classic"
+                        />
+                        <HomePageCard
+                            title="Time Attack"
+                            description="Race against the clock to answer questions"
+                            id="time"
+                        />
+                        <HomePageCard
+                            title="Challenge Mode"
+                            description="Complete increasingly difficult questions"
+                            id="challenge"
+                        />
+                        <HomePageCard
+                            title="Daily Quiz"
+                            description="New questions every day"
+                            id="daily"
+                        />
+                        <HomePageCard
+                            title="Multiplayer"
+                            description="Compete with other players in real-time"
+                            id="multiplayer"
+                        />
+                        <HomePageCard
+                            title="Multiplayer"
+                            description="Compete with other players in real-time"
+                            id="multiplayer"
+                        />
+                        <HomePageCard
+                            title="Multiplayer"
+                            description="Compete with other players in real-time"
+                            id="multiplayer"
+                        />
+                    </AutoFillGrid>
                 </SidebarWrapper>
             </ThemeProvider>
         ),
