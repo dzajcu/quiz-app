@@ -78,19 +78,19 @@ export const AutoFillGrid = React.forwardRef<HTMLDivElement, AutoFillGridProps>(
                         className={cn(
                             "grid w-full", 
                             "auto-rows-[20px]",
-                            // "place-items-center",
+                            "place-items-center",
                             // "place-content-center"
                         )}
                         style={{
                             gap: `${gap}px`,
-                            gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                            gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))`,
                         }}
                     >
                         {childrenArray.map((child, index) => (
                             <div
                                 key={index}
                                 style={calculateDimensions()}
-                                className="transition-all duration-300 ease-in-out"
+                                className="h-4/5 transition-all duration-300 ease-in-out"
                             >
                                 {child}
                             </div>

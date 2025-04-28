@@ -33,6 +33,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTheme } from "@/components/theme-provider";
 
 // This is sample data.
 const data = {
@@ -193,6 +194,8 @@ const ModeToggleWithTooltip: React.FC<ModeToggleWithTooltipProps> = ({
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { state } = useSidebar();
+    const { theme } = useTheme();
+    const logoSrc = theme === "dark" ? "/src/assets/logo-dark.png" : "/src/assets/logo-light.png";
 
     return (
         <Sidebar
@@ -201,10 +204,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         >
             <SidebarHeader>
                 {state !== "collapsed" ? (
-                    <img
-                        src="./scd"
-                        alt="Logo"
-                    />
+                    <div className="ml-2">
+                        <img
+                            src={logoSrc}
+                            alt="Logo"
+                            className="max-w-[120px]"
+                        />
+                    </div>
                 ) : null}
                 <div
                     className={`flex gap-2 ${
