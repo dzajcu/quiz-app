@@ -11,7 +11,6 @@ interface LogoProps {
 
 export default function Logo({
     short = false,
-    maxH = "45px",
     hover = false,
     className,
 }: LogoProps) {
@@ -27,11 +26,7 @@ export default function Logo({
             ? "/src/assets/logo2-dark.png"
             : "/src/assets/logo2-light.png";
 
-    const baseClasses = cn(
-        `max-h-[${maxH}]`,
-        hover && "transition-all duration-500",
-        className
-    );
+    const baseClasses = cn(hover && "max-h-[45px] transition-all duration-500", className);
 
     const logo1Classes = cn(
         baseClasses,
