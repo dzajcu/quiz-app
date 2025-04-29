@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
     short?: boolean;
-    maxH?: string;
     hover?: boolean;
     className?: string;
 }
@@ -26,7 +25,11 @@ export default function Logo({
             ? "/src/assets/logo2-dark.png"
             : "/src/assets/logo2-light.png";
 
-    const baseClasses = cn(hover && "max-h-[45px] transition-all duration-500", className);
+    const baseClasses = cn(
+        "max-h-[35px]",
+        hover && " transition-all duration-500",
+        className
+    );
 
     const logo1Classes = cn(
         baseClasses,
@@ -48,6 +51,7 @@ export default function Logo({
                     src={logo1Src}
                     alt="Logo"
                     className={logo1Classes}
+                    draggable="false"
                 />
             </div>
         );
@@ -59,11 +63,13 @@ export default function Logo({
                 src={logo1Src}
                 alt="Logo"
                 className={logo1Classes}
+                draggable="false"
             />
             <img
                 src={logo2Src}
                 alt="Logo"
                 className={logo2Classes}
+                draggable="false"
             />
         </div>
     );

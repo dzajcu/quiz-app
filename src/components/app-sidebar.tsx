@@ -1,13 +1,7 @@
 import * as React from "react";
 import {
-    AudioWaveform,
     BookOpen,
     Bot,
-    Command,
-    Frame,
-    GalleryVerticalEnd,
-    Map,
-    PieChart,
     Settings2,
     SquareTerminal,
     SquareChevronLeft,
@@ -15,7 +9,6 @@ import {
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import {
     Sidebar,
@@ -42,47 +35,30 @@ const data = {
         email: "m@example.com",
         avatar: "/avatars/shadcn.jpg",
     },
-    teams: [
-        {
-            name: "Acme Inc",
-            logo: GalleryVerticalEnd,
-            plan: "Enterprise",
-        },
-        {
-            name: "Acme Corp.",
-            logo: AudioWaveform,
-            plan: "Startup",
-        },
-        {
-            name: "Evil Corp.",
-            logo: Command,
-            plan: "Free",
-        },
-    ],
     navMain: [
         {
-            title: "Playground",
-            url: "#",
+            title: "Quiz",
+            url: "/quiz",
             icon: SquareTerminal,
             isActive: true,
             items: [
                 {
                     title: "History",
-                    url: "#",
+                    url: "/quiz",
                 },
                 {
                     title: "Starred",
-                    url: "#",
+                    url: "/quiz",
                 },
                 {
                     title: "Settings",
-                    url: "#",
+                    url: "/quiz",
                 },
             ],
         },
         {
             title: "Models",
-            url: "#",
+            url: "/",
             icon: Bot,
             items: [
                 {
@@ -101,7 +77,7 @@ const data = {
         },
         {
             title: "Documentation",
-            url: "#",
+            url: "/",
             icon: BookOpen,
             items: [
                 {
@@ -124,7 +100,7 @@ const data = {
         },
         {
             title: "Settings",
-            url: "#",
+            url: "/",
             icon: Settings2,
             items: [
                 {
@@ -144,23 +120,6 @@ const data = {
                     url: "#",
                 },
             ],
-        },
-    ],
-    projects: [
-        {
-            name: "Design Engineering",
-            url: "#",
-            icon: Frame,
-        },
-        {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChart,
-        },
-        {
-            name: "Travel",
-            url: "#",
-            icon: Map,
         },
     ],
 };
@@ -186,6 +145,38 @@ const ModeToggleWithTooltip: React.FC<ModeToggleWithTooltipProps> = ({
                 </TooltipTrigger>
                 <TooltipContent side="right">
                     <p>Toggle theme</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    );
+};
+interface SidebarTriggerWithTooltipProps {
+    isCollapsed: boolean;
+}
+
+const SidebarTriggerWithTooltip: React.FC<SidebarTriggerWithTooltipProps> = ({
+    isCollapsed,
+}) => {
+    if (!isCollapsed) {
+        return (
+            <SidebarTrigger className="bg-primary-button hover:bg-primary-button-hover text-white hover:text-white">
+                <SquareChevronLeft />
+            </SidebarTrigger>
+        );
+    }
+
+    return (
+        <TooltipProvider delayDuration={50}>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <span className="inline-block">
+                        <SidebarTrigger className="bg-primary-button hover:bg-primary-button-hover text-white hover:text-white">
+                            <SquareChevronRight />
+                        </SidebarTrigger>
+                    </span>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                    <p>Expand menu</p>
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
@@ -221,13 +212,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         }`}
                     >
                         <ModeToggleWithTooltip isCollapsed={state === "collapsed"} />
-                        <SidebarTrigger className="bg-primary-button hover:bg-primary-button-hover text-white hover:text-white">
-                            {state === "collapsed" ? (
-                                <SquareChevronRight />
-                            ) : (
-                                <SquareChevronLeft />
-                            )}
-                        </SidebarTrigger>
+                        <SidebarTriggerWithTooltip
+                            isCollapsed={state === "collapsed"}
+                        />
                     </div>
                 </div>
             </SidebarHeader>
@@ -237,7 +224,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={data.user} />
