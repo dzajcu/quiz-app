@@ -21,6 +21,9 @@ export default {
                 slideDown: "slideDown 300ms ease-out",
                 slideUp: "slideUp 300ms ease-out",
             },
+            transitionTimingFunction: {
+                logo: "cubic-bezier(.72,.18,.27,1.6)",
+            },
             borderRadius: {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",

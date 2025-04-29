@@ -33,7 +33,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useTheme } from "@/components/theme-provider";
+import Logo from "@/components/Logo";
 
 // This is sample data.
 const data = {
@@ -194,8 +194,6 @@ const ModeToggleWithTooltip: React.FC<ModeToggleWithTooltipProps> = ({
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { state } = useSidebar();
-    const { theme } = useTheme();
-    const logoSrc = theme === "dark" ? "/src/assets/logo-dark.png" : "/src/assets/logo-light.png";
 
     return (
         <Sidebar
@@ -205,28 +203,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarHeader>
                 {state !== "collapsed" ? (
                     <div className="ml-2">
-                        <img
-                            src={logoSrc}
-                            alt="Logo"
-                            className="max-w-[120px]"
-                        />
+                        <Logo hover={true} />
                     </div>
                 ) : null}
-                <div
-                    className={`flex gap-2 ${
-                        state === "collapsed"
-                            ? "flex-col-reverse"
-                            : "justify-between"
-                    }`}
-                >
-                    <ModeToggleWithTooltip isCollapsed={state === "collapsed"} />
-                    <SidebarTrigger className="bg-primary-button hover:bg-primary-button-hover text-white hover:text-white">
-                        {state === "collapsed" ? (
-                            <SquareChevronRight />
-                        ) : (
-                            <SquareChevronLeft />
-                        )}
-                    </SidebarTrigger>
+                <div className="flex flex-col gap-4">
+                    {state === "collapsed" ? (
+                        <div>
+                            <Logo
+                                short={true}
+                                hover={true}
+                            />
+                        </div>
+                    ) : null}
+                    <div
+                        className={`flex gap-2 ${
+                            state === "collapsed" ? "flex-col-reverse" : ""
+                        }`}
+                    >
+                        <ModeToggleWithTooltip isCollapsed={state === "collapsed"} />
+                        <SidebarTrigger className="bg-primary-button hover:bg-primary-button-hover text-white hover:text-white">
+                            {state === "collapsed" ? (
+                                <SquareChevronRight />
+                            ) : (
+                                <SquareChevronLeft />
+                            )}
+                        </SidebarTrigger>
+                    </div>
                 </div>
             </SidebarHeader>
 

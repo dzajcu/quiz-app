@@ -3,7 +3,7 @@ import { QuizHeaderProps } from "@/types/quiz";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import QuizExitDialog from "./QuizExitDialog";
-
+import Logo from "@/components/Logo";
 const QuizHeader = ({
     currentQuestionIndex,
     totalQuestions,
@@ -44,11 +44,7 @@ const QuizHeader = ({
                         Select one answer
                     </p>
                 </div>
-                <img
-                    className="max-lg:hidden"
-                    src="./asd"
-                    alt="Logo"
-                />
+            <Logo/>
             </div>
             <QuizExitDialog
                 isOpen={isExitDialogOpen}
