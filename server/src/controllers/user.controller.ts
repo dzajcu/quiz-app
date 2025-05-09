@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import User from "../models/user.model";
 import jwt from "jsonwebtoken";
 
@@ -162,4 +162,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
         console.error("Fetch users error:", error);
         res.status(500).json({ message: "An error occurred while fetching users" });
     }
+};
+
+export const getMe = (req: Request, res: Response, next: NextFunction) => {
+    req.params.userId = (req as any).userId;
+    next();
 };

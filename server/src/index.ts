@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes";
+import quizRoutes from "./routes/quiz.routes";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/quiz", quizRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
