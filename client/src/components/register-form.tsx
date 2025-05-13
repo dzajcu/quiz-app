@@ -4,15 +4,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
-export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
+export function RegisterForm({
+    className,
+    ...props
+}: React.ComponentProps<"div">) {
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: "",
         confirmPassword: "",
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const { register } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -22,9 +31,35 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Form data:", formData);
+        setIsLoading(true);
+        setError("");
+
+        try {
+            await register(formData);
+
+            toast.success("Registration successful! Welcome to Quiz App.");
+
+            navigate("/");
+        } catch (errorObj) {
+            interface ErrorResponse {
+                response?: {
+                    data?: {
+                        message?: string;
+                    };
+                };
+            }
+
+            const err = errorObj as ErrorResponse;
+            const errorMessage =
+                err?.response?.data?.message ||
+                "Registration failed. Please try again.";
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -99,11 +134,17 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                                     onChange={handleChange}
                                 />
                             </div>
+                            {error && (
+                                <div className="text-sm text-red-500 mt-1">
+                                    {error}
+                                </div>
+                            )}
                             <Button
                                 type="submit"
                                 className="w-full"
+                                disabled={isLoading}
                             >
-                                Register
+                                {isLoading ? "Processing..." : "Register"}
                             </Button>
                             <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
@@ -124,7 +165,9 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                                             fill="currentColor"
                                         />
                                     </svg>
-                                    <span className="sr-only">Login with Apple</span>
+                                    <span className="sr-only">
+                                        Login with Apple
+                                    </span>
                                 </Button>
                                 <Button
                                     variant="outline"
@@ -156,7 +199,9 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                                             fill="currentColor"
                                         />
                                     </svg>
-                                    <span className="sr-only">Login with Meta</span>
+                                    <span className="sr-only">
+                                        Login with Meta
+                                    </span>
                                 </Button>
                             </div>
                             <div className="text-center text-sm">
@@ -181,7 +226,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
             </Card>
             <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
                 By clicking continue, you agree to our{" "}
-                <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                <a href="#">Terms of Service</a> and{" "}
+                <a href="#">Privacy Policy</a>.
             </div>
         </div>
     );

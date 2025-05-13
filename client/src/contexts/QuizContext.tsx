@@ -1,4 +1,9 @@
-import React, { createContext, useContext, useCallback, ReactNode } from "react";
+import React, {
+    createContext,
+    useContext,
+    useCallback,
+    ReactNode,
+} from "react";
 import { useQuizState } from "@/hooks/quiz/useQuizState";
 import { useQuizDraft } from "@/hooks/quiz/useQuizDraft";
 import { useQuizDialogs } from "@/hooks/quiz/useQuizDialogs";
@@ -7,10 +12,11 @@ import quizData from "@/data/quizData.json";
 import { toast } from "sonner";
 import { QuizContextType } from "@/types/quiz";
 
-
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
-export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const QuizProvider: React.FC<{ children: ReactNode }> = ({
+    children,
+}) => {
     const {
         questions,
         setQuestions,
@@ -46,7 +52,6 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         closeQuizDialog,
         openCreateMethodDialog,
         closeCreateMethodDialog,
-        openSaveDraftDialog,
         closeSaveDraftDialog,
         handleCloseQuizDialog,
         handleBackToMethodSelect,
@@ -70,7 +75,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return questions.some(
                 (q) =>
                     q.question.trim() !== "" &&
-                    q.answers.filter((a) => a.trim() !== "").length >= 2
+                    q.answers.filter((a: string) => a.trim() !== "").length >= 2
             );
         };
 
@@ -91,7 +96,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 qIndex +
                 1,
             question: q.question,
-            answers: q.answers.map((text, index) => ({
+            answers: q.answers.map((text: string, index: number) => ({
                 id: String.fromCharCode(97 + index),
                 text,
                 isCorrect: index === 0,
@@ -190,7 +195,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
+        <QuizContext.Provider value={contextValue}>
+            {children}
+        </QuizContext.Provider>
     );
 };
 

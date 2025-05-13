@@ -4,13 +4,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
-export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+export function LoginForm({
+    className,
+    ...props
+}: React.ComponentProps<"div">) {
     const [formData, setFormData] = useState({
-        email: "",
+        username: "",
         password: "",
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -20,9 +29,35 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login data:", formData);
+        setIsLoading(true);
+        setError("");
+
+        try {
+            await login(formData);
+
+            toast.success("Login successful! Welcome back.");
+
+            navigate("/");
+        } catch (errorObj) {
+            interface ErrorResponse {
+                response?: {
+                    data?: {
+                        message?: string;
+                    };
+                };
+            }
+
+            const err = errorObj as ErrorResponse;
+            const errorMessage =
+                err?.response?.data?.message ||
+                "Login failed. Please check your credentials.";
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -38,19 +73,21 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     >
                         <div className="flex flex-col gap-6">
                             <div className="flex flex-col items-center text-center">
-                                <h1 className="text-2xl font-bold">Welcome back</h1>
+                                <h1 className="text-2xl font-bold">
+                                    Welcome back
+                                </h1>
                                 <p className="text-balance text-muted-foreground">
                                     Login to your QuizApp account
                                 </p>
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="username">Username</Label>
                                 <Input
-                                    id="email"
-                                    type="email"
-                                    placeholder="m@example.com"
+                                    id="username"
+                                    type="text"
+                                    placeholder="johndoe"
                                     required
-                                    value={formData.email}
+                                    value={formData.username}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -75,11 +112,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                                     onChange={handleChange}
                                 />
                             </div>
+                            {error && (
+                                <div className="text-sm text-red-500 mt-1">
+                                    {error}
+                                </div>
+                            )}
                             <Button
                                 type="submit"
                                 className="w-full"
+                                disabled={isLoading}
                             >
-                                Login
+                                {isLoading ? "Processing..." : "Login"}
                             </Button>
                             <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
@@ -100,7 +143,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                                             fill="currentColor"
                                         />
                                     </svg>
-                                    <span className="sr-only">Login with Apple</span>
+                                    <span className="sr-only">
+                                        Login with Apple
+                                    </span>
                                 </Button>
                                 <Button
                                     variant="outline"
@@ -132,7 +177,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                                             fill="currentColor"
                                         />
                                     </svg>
-                                    <span className="sr-only">Login with Meta</span>
+                                    <span className="sr-only">
+                                        Login with Meta
+                                    </span>
                                 </Button>
                             </div>
                             <div className="text-center text-sm">
@@ -157,7 +204,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             </Card>
             <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
                 By clicking continue, you agree to our{" "}
-                <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                <a href="#">Terms of Service</a> and{" "}
+                <a href="#">Privacy Policy</a>.
             </div>
         </div>
     );

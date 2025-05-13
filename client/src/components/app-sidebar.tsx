@@ -211,7 +211,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             state === "collapsed" ? "flex-col-reverse" : ""
                         }`}
                     >
-                        <ModeToggleWithTooltip isCollapsed={state === "collapsed"} />
+                        <ModeToggleWithTooltip
+                            isCollapsed={state === "collapsed"}
+                        />
                         <SidebarTriggerWithTooltip
                             isCollapsed={state === "collapsed"}
                         />
@@ -226,7 +228,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavMain items={data.navMain} />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user} />
+                <NavUser />
             </SidebarFooter>
         </Sidebar>
     );
