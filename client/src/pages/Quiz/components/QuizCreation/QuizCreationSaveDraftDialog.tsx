@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useQuiz } from "@/contexts/QuizContext";
-import { Archive, Trash2 } from "lucide-react";
+import { Archive, Globe, Lock, Trash2 } from "lucide-react";
 import { Icon } from "@/components/ui/icon-picker";
 
 const QuizCreationSaveDraftDialog = () => {
@@ -20,6 +20,7 @@ const QuizCreationSaveDraftDialog = () => {
         quizTitle,
         quizDescription,
         quizIcon,
+        isPublic,
         questions,
     } = useQuiz();
 
@@ -56,10 +57,23 @@ const QuizCreationSaveDraftDialog = () => {
                         <p className="text-sm text-muted-foreground">
                             {quizDescription}
                         </p>
-                    )}
+                    )}{" "}
                     <div className="text-sm">
                         <span className="font-medium">{validQuestionCount}</span>{" "}
                         question{validQuestionCount !== 1 ? "s" : ""} with content
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        {isPublic ? (
+                            <>
+                                <Globe className="h-4 w-4" />
+                                <span>Public quiz</span>
+                            </>
+                        ) : (
+                            <>
+                                <Lock className="h-4 w-4" />
+                                <span>Private quiz</span>
+                            </>
+                        )}
                     </div>
                 </div>
                 <DialogFooter className="flex sm:justify-between gap-2">

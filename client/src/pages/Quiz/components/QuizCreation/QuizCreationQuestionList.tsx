@@ -5,6 +5,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
     questions,
     onQuestionChange,
     onAnswerChange,
+    onCorrectAnswerChange,
     onDeleteQuestion,
 }) => {
     return (
@@ -19,6 +20,12 @@ const QuestionList: React.FC<QuestionListProps> = ({
                     }
                     onAnswerChange={(answerIndex, answerText) =>
                         onAnswerChange(index, answerIndex, answerText)
+                    }
+                    onCorrectAnswerChange={
+                        onCorrectAnswerChange
+                            ? (correctAnswerIndex) =>
+                                  onCorrectAnswerChange(index, correctAnswerIndex)
+                            : undefined
                     }
                     onDelete={() => onDeleteQuestion(index)}
                 />

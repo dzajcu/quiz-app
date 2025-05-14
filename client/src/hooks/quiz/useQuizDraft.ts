@@ -8,6 +8,7 @@ interface QuizDraft {
     title: string;
     description: string;
     icon?: IconName;
+    isPublic: boolean;
 }
 
 const DRAFT_KEY = "quizDraft";
@@ -29,13 +30,13 @@ export const useQuizDraft = () => {
             setHasDraft(false);
         }
     }, []);
-
     const saveDraft = useCallback(
         (
             questions: Question[],
             title: string,
             description: string,
-            icon?: IconName
+            icon?: IconName,
+            isPublic: boolean = true
         ) => {
             try {
                 const draft: QuizDraft = {
@@ -43,6 +44,7 @@ export const useQuizDraft = () => {
                     title,
                     description,
                     icon,
+                    isPublic,
                 };
                 localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
                 setHasDraft(true);

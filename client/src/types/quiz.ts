@@ -80,8 +80,10 @@ export interface QuestionCollapsibleProps {
     questionNumber: number;
     initialQuestion?: string;
     initialAnswers?: string[];
+    initialCorrectAnswerIndex?: number;
     onQuestionChange: (question: string) => void;
     onAnswerChange: (answerIndex: number, answer: string) => void;
+    onCorrectAnswerChange?: (correctAnswerIndex: number) => void;
 }
 
 export interface QuestionItemProps {
@@ -89,6 +91,7 @@ export interface QuestionItemProps {
     index: number;
     onQuestionChange: (questionText: string) => void;
     onAnswerChange: (answerIndex: number, answerText: string) => void;
+    onCorrectAnswerChange?: (correctAnswerIndex: number) => void;
     onDelete: () => void;
 }
 
@@ -96,6 +99,7 @@ export interface QuestionListProps {
     questions: Question[];
     onQuestionChange: (index: number, questionText: string) => void;
     onAnswerChange: (index: number, answerIndex: number, answerText: string) => void;
+    onCorrectAnswerChange?: (index: number, correctAnswerIndex: number) => void;
     onDeleteQuestion: (index: number) => void;
 }
 
@@ -141,6 +145,8 @@ export interface QuizContextState {
     setQuizTitle: React.Dispatch<React.SetStateAction<string>>;
     quizDescription: string;
     setQuizDescription: React.Dispatch<React.SetStateAction<string>>;
+    isPublic: boolean;
+    setIsPublic: React.Dispatch<React.SetStateAction<boolean>>;
     hasDraft: boolean;
 }
 
@@ -159,6 +165,10 @@ export interface QuizHandlers {
         questionIndex: number,
         answerIndex: number,
         answerText: string
+    ) => void;
+    handleCorrectAnswerChange: (
+        questionIndex: number,
+        correctAnswerIndex: number
     ) => void;
 
     // Quiz actions

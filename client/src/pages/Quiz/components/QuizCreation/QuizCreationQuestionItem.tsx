@@ -8,6 +8,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
     index,
     onQuestionChange,
     onAnswerChange,
+    onCorrectAnswerChange,
     onDelete,
 }) => {
     return (
@@ -16,8 +17,10 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                 questionNumber={index + 1}
                 initialQuestion={question.question}
                 initialAnswers={question.answers}
+                initialCorrectAnswerIndex={question.correctAnswerIndex}
                 onQuestionChange={onQuestionChange}
                 onAnswerChange={onAnswerChange}
+                onCorrectAnswerChange={onCorrectAnswerChange}
             />
             <Button
                 variant="ghost"

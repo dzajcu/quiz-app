@@ -1,10 +1,12 @@
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { InputQuiz } from "@/components/ui/input-quiz";
-import { Save, ArrowLeft, Plus } from "lucide-react";
+import { Save, ArrowLeft, Plus, Globe, Lock } from "lucide-react";
 import QuizQuestionList from "./QuizCreationQuestionList";
 import { useQuiz } from "@/contexts/QuizContext";
-import { IconPicker, IconName, Icon } from "@/components/ui/icon-picker";
+import { IconPicker, Icon } from "@/components/ui/icon-picker";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const QuizCreationDialog = () => {
     const {
@@ -16,11 +18,14 @@ const QuizCreationDialog = () => {
         setQuizDescription,
         quizIcon,
         setQuizIcon,
+        isPublic,
+        setIsPublic,
         questions,
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,
         handleAnswerChange,
+        handleCorrectAnswerChange,
         handleSaveQuiz,
         handleBackToMethodSelect,
     } = useQuiz();
@@ -30,7 +35,7 @@ const QuizCreationDialog = () => {
             open={isQuizDialogOpen}
             onOpenChange={handleCloseQuizDialog}
         >
-            <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+            <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto max-md:py-4 max-md:px-3">
                 <DialogHeader className="space-y-4 overflow-visible">
                     <div className="flex items-center gap-4">
                         <Button
@@ -51,19 +56,49 @@ const QuizCreationDialog = () => {
                                 autoFocus
                             />
                         </div>
-                        <IconPicker
-                            className={`p-2 mr-6 ${quizIcon ? "h-10 w-10" : ""}`}
-                            value={quizIcon}
-                            onValueChange={(icon) => setQuizIcon(icon)}
-                            searchable={false}
-                        >
-                            <Button
-                                variant={"ghost"}
-                                className="flex items-center gap-2 [&>*]:!w-7 [&>*]:!h-7"
+                        <div className="flex items-center md:pl-4">
+                            <IconPicker
+                                className={`p-2 md:mr-6 ${quizIcon ? "h-10 w-10" : ""}`}
+                                value={quizIcon}
+                                onValueChange={(icon) => setQuizIcon(icon)}
+                                searchable={false}
                             >
-                                {quizIcon ? <Icon name={quizIcon} /> : "Select Icon"}
-                            </Button>
-                        </IconPicker>
+                                <Button
+                                    variant={"ghost"}
+                                    className="flex items-center gap-2 [&>*]:!w-7 [&>*]:!h-7"
+                                >
+                                    {quizIcon ? (
+                                        <Icon name={quizIcon} />
+                                    ) : (
+                                        "Select Icon"
+                                    )}
+                                </Button>
+                            </IconPicker>
+                            <div className="flex space-x-2 mr-6">
+                                <Label
+                                    htmlFor="public-mode"
+                                    className="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-accent transition"
+                                >
+                                    {isPublic ? (
+                                        <>
+                                            <Globe className="h-4 w-4" />
+                                            <span>Public</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Lock className="h-4 w-4" />
+                                            <span>Private</span>
+                                        </>
+                                    )}
+                                </Label>
+                                <Switch
+                                    id="public-mode"
+                                    className="hidden"
+                                    checked={isPublic}
+                                    onCheckedChange={setIsPublic}
+                                />
+                            </div>
+                        </div>
                     </div>
                     <div className="flex items-start gap-2 flex-1 pl-4">
                         <textarea
@@ -82,15 +117,16 @@ const QuizCreationDialog = () => {
                             }}
                         />
                     </div>
-                </DialogHeader>
+                </DialogHeader>{" "}
                 <div className="overflow-hidden">
                     <QuizQuestionList
                         questions={questions}
                         onQuestionChange={handleQuestionChange}
                         onAnswerChange={handleAnswerChange}
+                        onCorrectAnswerChange={handleCorrectAnswerChange}
                         onDeleteQuestion={handleDeleteQuestion}
                     />
-                </div>
+                </div>{" "}
                 <div className="flex gap-4 mt-6">
                     <Button
                         variant="outline"

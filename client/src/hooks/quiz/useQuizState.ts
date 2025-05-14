@@ -1,22 +1,23 @@
 import { useState, useCallback } from "react";
-import { QuizQuestion } from "@/types/quiz";
+import { Question } from "@/types/quiz";
 import { IconName } from "@/components/ui/icon-picker";
 
 export const useQuizState = () => {
-    const [questions, setQuestions] = useState<QuizQuestion[]>([
+    const [questions, setQuestions] = useState<Question[]>([
         {
             question: "",
             answers: ["", "", "", ""],
+            correctAnswerIndex: 0,
         },
     ]);
     const [quizTitle, setQuizTitle] = useState("");
     const [quizDescription, setQuizDescription] = useState("");
     const [quizIcon, setQuizIcon] = useState<IconName | undefined>(undefined);
-
+    const [isPublic, setIsPublic] = useState(true);
     const handleAddQuestion = useCallback(() => {
         setQuestions((prev) => [
             ...prev,
-            { question: "", answers: ["", "", "", ""] },
+            { question: "", answers: ["", "", "", ""], correctAnswerIndex: 0 },
         ]);
     }, []);
 
@@ -37,7 +38,6 @@ export const useQuizState = () => {
         },
         []
     );
-
     const handleAnswerChange = useCallback(
         (questionIndex: number, answerIndex: number, answerText: string) => {
             setQuestions((prev) => {
@@ -48,19 +48,32 @@ export const useQuizState = () => {
         },
         []
     );
-
+    const handleCorrectAnswerChange = useCallback(
+        (questionIndex: number, correctAnswerIndex: number) => {
+            setQuestions((prev) => {
+                const newQuestions = [...prev];
+                newQuestions[questionIndex] = {
+                    ...newQuestions[questionIndex],
+                    correctAnswerIndex,
+                };
+                return newQuestions;
+            });
+        },
+        []
+    );
     const resetQuiz = useCallback(() => {
         setQuestions([
             {
                 question: "",
                 answers: ["", "", "", ""],
+                correctAnswerIndex: 0,
             },
         ]);
         setQuizTitle("");
         setQuizDescription("");
         setQuizIcon(undefined);
+        setIsPublic(true);
     }, []);
-
     return {
         questions,
         setQuestions,
@@ -70,10 +83,13 @@ export const useQuizState = () => {
         setQuizDescription,
         quizIcon,
         setQuizIcon,
+        isPublic,
+        setIsPublic,
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,
         handleAnswerChange,
+        handleCorrectAnswerChange,
         resetQuiz,
     };
 };

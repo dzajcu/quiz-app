@@ -1,9 +1,4 @@
-import React, {
-    createContext,
-    useContext,
-    useCallback,
-    ReactNode,
-} from "react";
+import React, { createContext, useContext, useCallback, ReactNode } from "react";
 import { useQuizState } from "@/hooks/quiz/useQuizState";
 import { useQuizDraft } from "@/hooks/quiz/useQuizDraft";
 import { useQuizDialogs } from "@/hooks/quiz/useQuizDialogs";
@@ -14,9 +9,7 @@ import { QuizContextType } from "@/types/quiz";
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
-export const QuizProvider: React.FC<{ children: ReactNode }> = ({
-    children,
-}) => {
+export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const {
         questions,
         setQuestions,
@@ -26,10 +19,13 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
         setQuizDescription,
         quizIcon,
         setQuizIcon,
+        isPublic,
+        setIsPublic,
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,
         handleAnswerChange,
+        handleCorrectAnswerChange,
         resetQuiz,
     } = useQuizState();
 
@@ -86,7 +82,6 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
             });
             return;
         }
-
         const formattedQuestions = questions.map((q, qIndex) => ({
             id:
                 quizData.quizzes.reduce(
@@ -99,11 +94,13 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
             answers: q.answers.map((text: string, index: number) => ({
                 id: String.fromCharCode(97 + index),
                 text,
-                isCorrect: index === 0,
+                isCorrect:
+                    index ===
+                    (q.correctAnswerIndex !== undefined ? q.correctAnswerIndex : 0),
             })),
         }));
-
         console.log("Saving quiz with questions:", formattedQuestions);
+        console.log("Quiz is public:", isPublic);
         toast.success("Success", {
             description: "Quiz has been created successfully!",
         });
@@ -111,10 +108,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
         clearDraft();
         resetQuiz();
         closeQuizDialog();
-    }, [questions, clearDraft, resetQuiz, closeQuizDialog]);
-
+    }, [questions, clearDraft, resetQuiz, closeQuizDialog, isPublic]);
     const handleSaveDraft = useCallback(() => {
-        saveDraft(questions, quizTitle, quizDescription, quizIcon);
+        saveDraft(questions, quizTitle, quizDescription, quizIcon, isPublic);
         closeSaveDraftDialog();
         closeQuizDialog();
     }, [
@@ -122,6 +118,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
         quizTitle,
         quizDescription,
         quizIcon,
+        isPublic,
         saveDraft,
         closeSaveDraftDialog,
         closeQuizDialog,
@@ -142,6 +139,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
                 setQuizDescription(draft.description || "");
                 setQuizTitle(draft.title || "");
                 setQuizIcon(draft.icon);
+                setIsPublic(draft.isPublic !== undefined ? draft.isPublic : true);
                 openQuizDialog();
             } else {
                 openCreateMethodDialog();
@@ -156,10 +154,10 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
         setQuizTitle,
         setQuizDescription,
         setQuizIcon,
+        setIsPublic,
         openQuizDialog,
         openCreateMethodDialog,
     ]);
-
     const contextValue: QuizContextType = {
         // State
         questions,
@@ -169,6 +167,8 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
         setQuizDescription,
         quizIcon,
         setQuizIcon,
+        isPublic,
+        setIsPublic,
         hasDraft,
 
         // Dialog states
@@ -176,11 +176,11 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
         isCreateMethodDialogOpen,
         isSaveDraftDialogOpen,
 
-        // Handlers
         handleAddQuestion,
         handleDeleteQuestion,
         handleQuestionChange,
         handleAnswerChange,
+        handleCorrectAnswerChange,
         handleSaveQuiz,
         handleSaveDraft,
         handleDiscardDraft,
@@ -195,9 +195,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     return (
-        <QuizContext.Provider value={contextValue}>
-            {children}
-        </QuizContext.Provider>
+        <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
     );
 };
 
