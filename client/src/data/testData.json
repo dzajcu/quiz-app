@@ -1,0 +1,24 @@
+{
+    "title": "Test quiz",
+
+    "questions": [
+        {
+            "question": "Test question",
+            "description": "Test description",
+            "answers": [
+                { "text": "111", "isCorrect": true },
+                { "text": "2222222", "isCorrect": false },
+                { "text": "3333333", "isCorrect": false }
+            ]
+        },
+        {
+            "question": "Test question2",
+            "answers": [
+                { "text": "21", "isCorrect": false },
+                { "text": "232", "isCorrect": true },
+                { "text": "3333333", "isCorrect": true },
+                { "text": "4444444", "isCorrect": false }
+            ]
+        }
+    ]
+}

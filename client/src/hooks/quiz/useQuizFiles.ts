@@ -82,11 +82,25 @@ export const useQuizFiles = ({
                 return {
                     title: content.title || "New Quiz",
                     description: content.description || "",
-                    questions: content.questions.map((q) => ({
-                        question: q.question,
-                        answers: q.answers.map((a) => a.text),
-                        correctAnswerIndex: q.answers.findIndex((a) => a.isCorrect),
-                    })),
+                    questions: content.questions.map((q) => {
+                        const answers = q.answers?.map((a) => a?.text || "") || [
+                            "",
+                            "",
+                            "",
+                            "",
+                        ];
+                        while (answers.length < 4) {
+                            answers.push("");
+                        }
+                        const correctAnswerIndex =
+                            q.answers?.findIndex((a) => a?.isCorrect) || 0;
+                        return {
+                            question: q.question || "",
+                            answers,
+                            correctAnswerIndex:
+                                correctAnswerIndex >= 0 ? correctAnswerIndex : 0,
+                        };
+                    }),
                 };
             } catch (error) {
                 throw new Error(
@@ -125,10 +139,13 @@ export const useQuizFiles = ({
                     if (parsedData.questions.length === 0) {
                         throw new Error("No valid questions found in the file");
                     }
-
                     const mappedQuestions = parsedData.questions.map((q) => ({
                         question: q.question,
                         answers: q.answers,
+                        correctAnswerIndex:
+                            typeof q.correctAnswerIndex === "number"
+                                ? q.correctAnswerIndex
+                                : 0,
                     }));
 
                     setQuestions(mappedQuestions);

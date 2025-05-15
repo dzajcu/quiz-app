@@ -23,9 +23,10 @@ const QuizCreationSaveDraftDialog = () => {
         isPublic,
         questions,
     } = useQuiz();
-
     const validQuestionCount = questions.filter(
-        (q) => q.question.trim() !== "" && q.answers.some((a) => a.trim() !== "")
+        (q) =>
+            (q.question || "").trim() !== "" &&
+            q.answers.some((a) => (a || "").trim() !== "")
     ).length;
 
     return (

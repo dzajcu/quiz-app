@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { InputQuiz } from "@/components/ui/input-quiz";
 import { Save, ArrowLeft, Plus, Globe, Lock } from "lucide-react";
 import QuizQuestionList from "./QuizCreationQuestionList";
+import { toast } from "sonner";
 import { useQuiz } from "@/contexts/QuizContext";
 import { IconPicker, Icon } from "@/components/ui/icon-picker";
 import { Switch } from "@/components/ui/switch";
@@ -135,10 +136,17 @@ const QuizCreationDialog = () => {
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Question
-                    </Button>
-                    <Button
+                    </Button>                    <Button
                         className="flex-1"
-                        onClick={handleSaveQuiz}
+                        onClick={() => {
+                            if (!quizIcon) {
+                                toast.error("Icon Required", {
+                                    description: "Please select an icon for your quiz before creating it."
+                                });
+                                return;
+                            }
+                            handleSaveQuiz();
+                        }}
                     >
                         <Save className="w-4 h-4 mr-2" />
                         Create Quiz

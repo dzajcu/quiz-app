@@ -24,12 +24,14 @@ const QuestionCollapsible = ({
     const [correctAnswerIndex, setCorrectAnswerIndex] = useState(
         initialCorrectAnswerIndex
     );
-
-    // Update local state when initial values change
     useEffect(() => {
         setQuestion(initialQuestion);
         setAnswers(initialAnswers);
-        setCorrectAnswerIndex(initialCorrectAnswerIndex || 0);
+        setCorrectAnswerIndex(
+            typeof initialCorrectAnswerIndex === "number"
+                ? initialCorrectAnswerIndex
+                : 0
+        );
     }, [initialQuestion, initialAnswers, initialCorrectAnswerIndex]);
 
     const handleQuestionChange = (value: string) => {
