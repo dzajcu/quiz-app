@@ -39,6 +39,8 @@ const QuizCreationDialog = () => {
 
         if (!quizTitle?.trim()) {
             errors.push("Quiz title");
+        } else if (quizTitle.length < 3) {
+            errors.push("Quiz title with at least 3 characters");
         }
         if (!quizIcon) {
             errors.push("Quiz icon");
@@ -86,7 +88,8 @@ const QuizCreationDialog = () => {
                                 onChange={(e) => setQuizTitle(e.target.value)}
                                 placeholder="New Quiz"
                                 className={`text-lg font-semibold pl-0 ${
-                                    showErrors && !quizTitle?.trim()
+                                    (showErrors && !quizTitle?.trim()) ||
+                                    quizTitle.length < 3
                                         ? "border-red-500 focus-visible:border-red-500"
                                         : ""
                                 }`}
@@ -199,7 +202,7 @@ const QuizCreationDialog = () => {
                             setShowErrors(true);
                             if (errors.length > 0) {
                                 if (errors.length === 1) {
-                                    toast.error(`${errors[0]} Required`, {
+                                    toast.error("Missing Required Fields", {
                                         description: `Please provide ${errors[0].toLowerCase()} before creating the quiz.`,
                                     });
                                 } else {

@@ -3,9 +3,9 @@ import { useQuizState } from "@/hooks/quiz/useQuizState";
 import { useQuizDraft } from "@/hooks/quiz/useQuizDraft";
 import { useQuizDialogs } from "@/hooks/quiz/useQuizDialogs";
 import { useQuizFiles } from "@/hooks/quiz/useQuizFiles";
-import quizData from "@/data/quizData.json";
 import { toast } from "sonner";
 import { QuizContextType } from "@/types/quiz";
+import { quizService } from "@/services/quiz.service";
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
@@ -63,8 +63,6 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         closeCreateMethodDialog,
         openQuizDialog,
     });
-
-    // Quiz action functions
     const handleSaveQuiz = useCallback(() => {
         const validateQuiz = () => {
             if (questions.length === 0) return false;
@@ -82,33 +80,34 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             });
             return;
         }
-        const formattedQuestions = questions.map((q, qIndex) => ({
-            id:
-                quizData.quizzes.reduce(
-                    (acc, quiz) => acc + quiz.questions.length,
-                    0
-                ) +
-                qIndex +
-                1,
-            question: q.question,
-            answers: q.answers.map((text: string, index: number) => ({
-                id: String.fromCharCode(97 + index),
-                text,
-                isCorrect:
-                    index ===
-                    (q.correctAnswerIndex !== undefined ? q.correctAnswerIndex : 0),
-            })),
-        }));
-        console.log("Saving quiz with questions:", formattedQuestions);
-        console.log("Quiz is public:", isPublic);
-        toast.success("Success", {
-            description: "Quiz has been created successfully!",
-        });
 
-        clearDraft();
-        resetQuiz();
-        closeQuizDialog();
-    }, [questions, clearDraft, resetQuiz, closeQuizDialog, isPublic]);
+        quizService
+            .createQuiz(quizTitle, questions, isPublic, quizIcon)
+            .then(() => {
+                toast.success("Success", {
+                    description: "Quiz has been created successfully!",
+                });
+                clearDraft();
+                resetQuiz();
+                closeQuizDialog();
+            })
+            .catch((error) => {
+                console.error("Error creating quiz:", error);
+                toast.error("Error", {
+                    description:
+                        error.response?.data?.message ||
+                        "Failed to create quiz. Please try again.",
+                });
+            });
+    }, [
+        questions,
+        quizTitle,
+        quizIcon,
+        isPublic,
+        clearDraft,
+        resetQuiz,
+        closeQuizDialog,
+    ]);
     const handleSaveDraft = useCallback(() => {
         saveDraft(questions, quizTitle, quizDescription, quizIcon, isPublic);
         closeSaveDraftDialog();
@@ -199,7 +198,6 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useQuiz = (): QuizContextType => {
     const context = useContext(QuizContext);
 

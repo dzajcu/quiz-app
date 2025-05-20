@@ -26,7 +26,6 @@ export interface IQuiz extends Document {
 const answerSchema = new Schema<IAnswer>({
     text: {
         type: String,
-        required: true,
     },
     isCorrect: {
         type: Boolean,
@@ -45,9 +44,12 @@ const questionSchema = new Schema<IQuestion>({
         validate: [
             {
                 validator: function (answers: IAnswer[]) {
-                    return answers.length >= 2 && answers.length <= 4;
+                    const validAnswers = answers.filter(
+                        (a) => a.text && a.text.trim().length > 0
+                    );
+                    return validAnswers.length >= 2 && validAnswers.length <= 4;
                 },
-                message: "Each question must have between 2 and 4 answers",
+                message: "Each question must have between 2 and 4 non-empty answers",
             },
             {
                 validator: function (answers: IAnswer[]) {
