@@ -103,20 +103,27 @@ export const createQuiz = async (req: Request, res: Response) => {
                 !Array.isArray(question.answers)
             ) {
                 return res.status(400).json({
-                    message: `Invalid question format at position ${index + 1}`,
+                    message: `Invalid question format in question ${index + 1}`,
                 });
             }
-
-            if (question.answers.length < 2 || question.answers.length > 4) {
+            const validAnswers = question.answers.filter(
+                (a: { text: string }) => a.text && a.text.trim().length > 0
+            );
+            if (!(validAnswers.length >= 2 && validAnswers.length <= 4)) {
                 return res.status(400).json({
-                    message: `Question at position ${
+                    message: `Question number ${
                         index + 1
                     } must have between 2 and 4 answers`,
                 });
             }
 
             const correctAnswers = question.answers.filter((a: any) => a.isCorrect);
-            if (correctAnswers.length !== 1) {
+            const isCorrectAnswerValid =
+                question.answers
+                    .find((a: { text: string; isCorrect: boolean }) => a.isCorrect)
+                    ?.text?.trim().length > 0;
+
+            if (correctAnswers.length !== 1 || !isCorrectAnswerValid) {
                 return res.status(400).json({
                     message: `Question at position ${
                         index + 1
