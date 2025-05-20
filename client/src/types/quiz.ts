@@ -21,7 +21,7 @@ export interface RawQuestion {
 export interface Question {
     question: string;
     answers: string[];
-    correctAnswerIndex?: number;
+    correctAnswerIndex: number;
 }
 
 export interface QuizFile {

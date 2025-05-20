@@ -39,7 +39,8 @@ const QuizCreationDialog = () => {
 
         if (!quizTitle?.trim()) {
             errors.push("Quiz title");
-        } else if (quizTitle.length < 3) {
+        }
+        if (quizTitle.length < 3) {
             errors.push("Quiz title with at least 3 characters");
         }
         if (!quizIcon) {
@@ -50,9 +51,15 @@ const QuizCreationDialog = () => {
             (q) =>
                 q.question?.trim() && q.answers?.filter((a) => a?.trim()).length >= 2
         );
+        const hasValidCorrectAnswer = questions.some(
+            (q) => q.answers[q.correctAnswerIndex]?.length > 0
+        );
 
         if (!hasValidQuestion) {
             errors.push("At least one question with two answers");
+        }
+        if (!hasValidCorrectAnswer) {
+            errors.push("At least one correct answer for each question");
         }
 
         return errors;
@@ -88,8 +95,7 @@ const QuizCreationDialog = () => {
                                 onChange={(e) => setQuizTitle(e.target.value)}
                                 placeholder="New Quiz"
                                 className={`text-lg font-semibold pl-0 ${
-                                    (showErrors && !quizTitle?.trim()) ||
-                                    quizTitle.length < 3
+                                    showErrors && quizTitle?.trim().length < 3
                                         ? "border-red-500 focus-visible:border-red-500"
                                         : ""
                                 }`}
