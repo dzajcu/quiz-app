@@ -8,7 +8,7 @@ export interface Answer {
 }
 
 export interface UserAnswer {
-    questionId: number;
+    questionId: string;
     answerId: string;
 }
 
@@ -195,3 +195,15 @@ export type QuizContextType = QuizContextState &
         quizIcon: IconName | undefined;
         setQuizIcon: (icon: IconName | undefined) => void;
     };
+
+export interface Quiz {
+  _id: string;
+  title: string;
+  isPublic: boolean;
+  icon: IconName;
+  questions: Array<{
+    id: string;
+    question: string;
+    answers: Answer[];
+  }>;
+}

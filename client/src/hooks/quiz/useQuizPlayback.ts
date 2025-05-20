@@ -3,7 +3,7 @@ import { UserAnswer, UseQuizPlaybackResult } from "@/types/quiz";
 
 interface UseQuizPlaybackProps {
     questions: Array<{
-        id: number;
+        id: string;
         question: string;
         answers: Array<{
             id: string;
@@ -19,7 +19,6 @@ export const useQuizPlayback = (
 ): UseQuizPlaybackResult => {
     const questions = props?.questions || [];
     const initialIndex = props?.initialIndex || 0;
-
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);

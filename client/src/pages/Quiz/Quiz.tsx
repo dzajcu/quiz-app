@@ -5,15 +5,16 @@ import QuizHeader from "./components/QuizPlayback/QuizHeader";
 import QuizContent from "./components/QuizPlayback/QuizContent";
 import { useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { quizService } from "@/services/quiz.service";
 
 interface QuizType {
-    id: string;
+    _id: string;
     title: string;
     questions: {
-        id: number;
+        _id: string;
         question: string;
         answers: Array<{
-            id: string;
+            _id: string;
             text: string;
             isCorrect: boolean;
         }>;
@@ -24,6 +25,35 @@ const Quiz = () => {
     const { quizId } = useParams();
     const [quiz, setQuiz] = useState<QuizType | null>(null);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (quizId) {
+            const fetchQuiz = async () => {
+                try {
+                    const quizFromApi = await quizService.getQuizById(quizId);
+                    setQuiz(quizFromApi.quiz);
+                    console.log("Quiz from API:", quizFromApi.quiz);
+                } catch (error) {
+                    console.error("Error fetching quiz:", error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchQuiz();
+        }
+    }, [quizId]);
+
+    const questionsForPlayback =
+        quiz?.questions.map((q) => ({
+            id: q._id,
+            question: q.question,
+            answers: q.answers.map((a) => ({
+                id: a._id,
+                text: a.text,
+                isCorrect: a.isCorrect,
+            })),
+        })) || [];
 
     const {
         currentQuestionIndex,
@@ -37,24 +67,7 @@ const Quiz = () => {
         quizResults,
         handleFinishQuiz,
         resetQuiz,
-    } = useQuizPlayback(
-        quiz
-            ? {
-                  questions: quiz.questions,
-                  initialIndex: 0,
-              }
-            : undefined
-    );
-
-    useEffect(() => {
-        if (quizId) {
-            const foundQuiz = quizData.quizzes.find((q) => q.id === quizId);
-            if (foundQuiz) {
-                setQuiz(foundQuiz);
-            }
-        }
-        setLoading(false);
-    }, [quizId]);
+    } = useQuizPlayback({ questions: questionsForPlayback });
 
     if (!loading && !quiz) {
         return (
@@ -78,7 +91,6 @@ const Quiz = () => {
                 totalQuestions={quiz.questions.length}
                 questionText={currentQuestion.question}
             />
-
         </>
     );
 

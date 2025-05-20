@@ -10,17 +10,17 @@ export const getAllPublicQuizzes = async (req: Request, res: Response) => {
 
         const quizzes = await Quiz.find({ isPublic: true })
             .populate("author", "username")
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
+            .sort({ createdAt: -1 });
+        // .skip(skip)
+        // .limit(limit);
 
         const total = await Quiz.countDocuments({ isPublic: true });
 
         res.status(200).json({
             quizzes,
-            totalPages: Math.ceil(total / limit),
-            currentPage: page,
-            total,
+            // totalPages: Math.ceil(total / limit),
+            // currentPage: page,
+            // total,
         });
     } catch (error) {
         console.error("Error fetching public quizzes:", error);
