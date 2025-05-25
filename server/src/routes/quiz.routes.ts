@@ -17,7 +17,7 @@ router.get("/public", getAllPublicQuizzes);
 router.get("/my-quizzes", auth, getMe, getUserQuizzes);
 router.get("/user/:userId", auth, getUserQuizzes);
 
-router.get("/:id", getQuizById);
+router.get("/:id", auth, getQuizById);
 
 router.post("/", auth, createQuiz);
 router.patch("/:id", auth, updateQuiz);

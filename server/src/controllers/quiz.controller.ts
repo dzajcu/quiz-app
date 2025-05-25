@@ -58,17 +58,29 @@ export const getQuizById = async (req: Request, res: Response) => {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid quiz ID" });
         }
-
         const quiz = await Quiz.findById(id).populate("author", "username");
 
         if (!quiz) {
             return res.status(404).json({ message: "Quiz not found" });
         }
 
-        if (!quiz.isPublic && quiz.author.toString() !== (req as any).userId) {
-            return res
-                .status(403)
-                .json({ message: "You don't have permission to access this quiz" });
+        if (!quiz.isPublic) {
+            const userId = (req as any).userId;
+            if (!userId) {
+                return res
+                    .status(403)
+                    .json({
+                        message: "Authentication required to access private quiz",
+                    });
+            }
+            const authorId = (quiz.author as any)._id || quiz.author;
+            if (authorId.toString() !== userId) {
+                return res
+                    .status(403)
+                    .json({
+                        message: "You don't have permission to access this quiz",
+                    });
+            }
         }
 
         res.status(200).json({ quiz });
@@ -130,11 +142,12 @@ export const createQuiz = async (req: Request, res: Response) => {
                     } must have exactly one correct answer`,
                 });
             }
-        }        const processedQuestions = questions.map((q, index) => {
-            const filteredAnswers = q.answers.filter((answer: any) => 
-                answer.text && answer.text.trim().length > 0
+        }
+        const processedQuestions = questions.map((q, index) => {
+            const filteredAnswers = q.answers.filter(
+                (answer: any) => answer.text && answer.text.trim().length > 0
             );
-            
+
             return {
                 ...q,
                 answers: filteredAnswers,
