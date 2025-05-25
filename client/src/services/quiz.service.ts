@@ -22,15 +22,31 @@ export const quizService = {
         isPublic: boolean,
         icon: IconName
     ) => {
-        const formattedQuestions = questions.map((q) => ({
-            question: q.question,
-            answers: q.answers.map((text: string, index: number) => ({
-                text,
-                isCorrect:
-                    index ===
-                    (q.correctAnswerIndex !== undefined ? q.correctAnswerIndex : 0),
-            })),
-        }));
+        const formattedQuestions = questions.map((q) => {
+            // Filter out empty answers
+            const filteredAnswers = q.answers
+                .map((text: string, index: number) => ({
+                    text: text.trim(),
+                    originalIndex: index,
+                }))
+                .filter((answer) => answer.text !== "");
+
+            // Adjust correctAnswerIndex to match filtered answers
+            const originalCorrectIndex =
+                q.correctAnswerIndex !== undefined ? q.correctAnswerIndex : 0;
+            const correctAnswerText = q.answers[originalCorrectIndex]?.trim();
+            const newCorrectIndex = filteredAnswers.findIndex(
+                (answer) => answer.text === correctAnswerText
+            );
+
+            return {
+                question: q.question,
+                answers: filteredAnswers.map((answer, index) => ({
+                    text: answer.text,
+                    isCorrect: index === newCorrectIndex,
+                })),
+            };
+        });
 
         const payload: CreateQuizRequest = {
             title,

@@ -4,7 +4,6 @@ import Quiz from "./pages/Quiz/Quiz.tsx";
 import QuizMenu from "./pages/Quiz/QuizMenu.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
-import { QuizProvider } from "@/contexts/QuizContext";
 import LoginForm from "./pages/authentication/loginForm.tsx";
 import RegisterForm from "./pages/authentication/registerForm.tsx";
 import ProfilePage from "./pages/authentication/profile.tsx";
@@ -14,9 +13,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/protected-route.tsx";
 
 const RootLayout = () => {
-    const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    ).matches;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     return (
         <ThemeProvider
@@ -113,11 +110,7 @@ const router = createBrowserRouter([
                         children: [
                             {
                                 path: "/quiz",
-                                element: (
-                                    <QuizProvider>
-                                        <QuizMenu />
-                                    </QuizProvider>
-                                ),
+                                element: <QuizMenu />,
                             },
                             {
                                 path: "/quiz/:quizId",

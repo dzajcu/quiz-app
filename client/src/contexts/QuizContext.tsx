@@ -9,7 +9,10 @@ import { quizService } from "@/services/quiz.service";
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
-export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const QuizProvider: React.FC<{
+    children: ReactNode;
+    refreshQuizzes?: () => void;
+}> = ({ children, refreshQuizzes }) => {
     const {
         questions,
         setQuestions,
@@ -80,7 +83,6 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             });
             return;
         }
-
         quizService
             .createQuiz(quizTitle, questions, isPublic, quizIcon)
             .then(() => {
@@ -90,6 +92,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 clearDraft();
                 resetQuiz();
                 closeQuizDialog();
+                refreshQuizzes?.();
             })
             .catch((error) => {
                 console.error("Error creating quiz:", error);
@@ -107,6 +110,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         clearDraft,
         resetQuiz,
         closeQuizDialog,
+        refreshQuizzes,
     ]);
     const handleSaveDraft = useCallback(() => {
         saveDraft(questions, quizTitle, quizDescription, quizIcon, isPublic);
@@ -191,6 +195,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setShowSaveDraftDialog,
         handleFileSelect,
         handleManualCreate,
+        refreshQuizzes,
     };
 
     return (

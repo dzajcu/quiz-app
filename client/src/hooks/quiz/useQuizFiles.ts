@@ -176,7 +176,6 @@ export const useQuizFiles = ({
             openQuizDialog,
         ]
     );
-
     const handleManualCreate = useCallback(
         (count: number) => {
             const validCount = Math.min(Math.max(1, count), 200);
@@ -184,6 +183,7 @@ export const useQuizFiles = ({
                 Array.from({ length: validCount }, () => ({
                     question: "",
                     answers: ["", "", "", ""],
+                    correctAnswerIndex: 0,
                 }))
             );
             closeCreateMethodDialog();

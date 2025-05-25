@@ -1,12 +1,13 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Rainbow } from "lucide-react";
 import { useIsMedium } from "@/hooks/use-medium";
+import { Icon, IconName } from "@/components/ui/icon-picker";
 
 interface QuizMenuCardProps {
     title: string;
     description: string;
     onQuizSelect?: (title: string, id: string) => void;
     id?: string;
+    icon?: IconName;
 }
 
 const QuizMenuCard = ({
@@ -14,6 +15,7 @@ const QuizMenuCard = ({
     description,
     onQuizSelect,
     id,
+    icon,
 }: QuizMenuCardProps) => {
     const isMedium = useIsMedium();
     return (
@@ -22,7 +24,10 @@ const QuizMenuCard = ({
             onClick={() => onQuizSelect && id && onQuizSelect(title, id)}
         >
             <CardHeader className="p-0">
-                <Rainbow className="inline-block size-10 text-white" />
+                <Icon
+                    name={icon}
+                    className="inline-block size-10 text-white"
+                />
             </CardHeader>
             <CardContent className="ml-6 flex max-lg:flex-col p-0 lg:items-center justify-between w-full max-lg:gap-1">
                 <CardTitle className="text-lg text-white">{title}</CardTitle>

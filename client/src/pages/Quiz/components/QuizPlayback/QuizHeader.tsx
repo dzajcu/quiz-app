@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import { QuizHeaderProps } from "@/types/quiz";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useIsMedium } from "@/hooks/use-medium";
 import QuizExitDialog from "./QuizExitDialog";
 import Logo from "@/components/Logo";
 const QuizHeader = ({
@@ -20,6 +21,7 @@ const QuizHeader = ({
         setIsExitDialogOpen(false);
         navigate("/quiz");
     };
+    const isMedium = useIsMedium();
 
     return (
         <>
@@ -44,7 +46,7 @@ const QuizHeader = ({
                         Select one answer
                     </p>
                 </div>
-            <Logo/>
+                {!isMedium && <Logo />}
             </div>
             <QuizExitDialog
                 isOpen={isExitDialogOpen}

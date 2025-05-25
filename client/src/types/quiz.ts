@@ -187,6 +187,9 @@ export interface QuizHandlers {
     // File management
     handleFileSelect: (file: File) => void;
     handleManualCreate: (count: number) => void;
+
+    // Quiz refresh
+    refreshQuizzes?: () => void;
 }
 
 export type QuizContextType = QuizContextState &
@@ -197,13 +200,13 @@ export type QuizContextType = QuizContextState &
     };
 
 export interface Quiz {
-  _id: string;
-  title: string;
-  isPublic: boolean;
-  icon: IconName;
-  questions: Array<{
-    id: string;
-    question: string;
-    answers: Answer[];
-  }>;
+    _id: string;
+    title: string;
+    isPublic: boolean;
+    icon: IconName;
+    questions: Array<{
+        id: string;
+        question: string;
+        answers: Answer[];
+    }>;
 }

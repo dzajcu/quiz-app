@@ -13,6 +13,7 @@ import {
 import { useIsMedium } from "@/hooks/use-medium";
 import { quizService } from "@/services/quiz.service";
 import { Quiz } from "@/types/quiz";
+import { QuizProvider } from "@/contexts/QuizContext";
 
 const QuizMenu = () => {
     const [quizzes, setQuizzes] = useState<Quiz[]>();
@@ -23,22 +24,21 @@ const QuizMenu = () => {
     } | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    useEffect(() => {
-        const fetchQuizzes = async () => {
+    const fetchQuizzes = async () => {
+        try {
+            const publicQuizzes = await quizService.getAllPublicQuizzes();
+            setQuizzes(publicQuizzes.quizzes);
             try {
-                const publicQuizzes = await quizService.getAllPublicQuizzes();
-                setQuizzes(publicQuizzes.quizzes);
-                try {
-                    const myQuizzes = await quizService.getMyQuizzes();
-                    setMyQuizzes(myQuizzes.quizzes);
-                } catch (error) {
-                    console.log("User is probably not logged in:", error);
-                }
+                const myQuizzes = await quizService.getMyQuizzes();
+                setMyQuizzes(myQuizzes.quizzes);
             } catch (error) {
-                console.error("Error fetching quizzes:", error);
+                console.log("User is probably not logged in:", error);
             }
-        };
-
+        } catch (error) {
+            console.error("Error fetching quizzes:", error);
+        }
+    };
+    useEffect(() => {
         fetchQuizzes();
     }, []);
 
@@ -79,6 +79,7 @@ const QuizMenu = () => {
                                 title={quiz.title}
                                 description={`${quiz.questions.length} questions`}
                                 onQuizSelect={handleQuizSelect}
+                                icon={quiz.icon}
                             />
                         </CarouselItem>
                     ))}
@@ -110,6 +111,7 @@ const QuizMenu = () => {
                                 title={quiz.title}
                                 description={`${quiz.questions.length} questions`}
                                 onQuizSelect={handleQuizSelect}
+                                icon={quiz.icon}
                             />
                         </CarouselItem>
                     ))}
@@ -119,9 +121,8 @@ const QuizMenu = () => {
             </Carousel>
         </div>
     );
-
     return (
-        <>
+        <QuizProvider refreshQuizzes={fetchQuizzes}>
             <BackgroundLayout
                 leftSection={leftSection}
                 rightSection={rightSection}
@@ -135,7 +136,7 @@ const QuizMenu = () => {
                     quizId={selectedQuiz.id}
                 />
             )}
-        </>
+        </QuizProvider>
     );
 };
 

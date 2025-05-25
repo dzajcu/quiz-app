@@ -130,12 +130,17 @@ export const createQuiz = async (req: Request, res: Response) => {
                     } must have exactly one correct answer`,
                 });
             }
-        }
-
-        const processedQuestions = questions.map((q, index) => ({
-            ...q,
-            id: q.id || index + 1,
-        }));
+        }        const processedQuestions = questions.map((q, index) => {
+            const filteredAnswers = q.answers.filter((answer: any) => 
+                answer.text && answer.text.trim().length > 0
+            );
+            
+            return {
+                ...q,
+                answers: filteredAnswers,
+                id: q.id || index + 1,
+            };
+        });
 
         const newQuiz = new Quiz({
             title,

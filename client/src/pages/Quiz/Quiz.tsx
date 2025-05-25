@@ -32,7 +32,6 @@ const Quiz = () => {
                 try {
                     const quizFromApi = await quizService.getQuizById(quizId);
                     setQuiz(quizFromApi.quiz);
-                    console.log("Quiz from API:", quizFromApi.quiz);
                 } catch (error) {
                     console.error("Error fetching quiz:", error);
                 } finally {
