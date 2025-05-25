@@ -50,6 +50,7 @@ export interface QuizHeaderProps {
     currentQuestionIndex: number;
     totalQuestions: number;
     questionText: string;
+    onReturn?: () => void;
 }
 
 export interface QuizContentProps {

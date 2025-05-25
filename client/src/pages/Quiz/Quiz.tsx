@@ -1,9 +1,10 @@
-import quizData from "@/data/quizData.json";
 import { useQuizPlayback } from "@/hooks/quiz/useQuizPlayback";
+import { useQuizExit } from "@/hooks/quiz/useQuizExit";
 import BackgroundLayout from "@/components/BackgroundLayout";
 import QuizHeader from "./components/QuizPlayback/QuizHeader";
 import QuizContent from "./components/QuizPlayback/QuizContent";
-import { useParams, Navigate } from "react-router-dom";
+import QuizExitDialog from "./components/QuizPlayback/QuizExitDialog";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { quizService } from "@/services/quiz.service";
 
@@ -23,6 +24,7 @@ interface QuizType {
 
 const Quiz = () => {
     const { quizId } = useParams();
+    const navigate = useNavigate();
     const [quiz, setQuiz] = useState<QuizType | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -68,6 +70,18 @@ const Quiz = () => {
         resetQuiz,
     } = useQuizPlayback({ questions: questionsForPlayback });
 
+    // Quiz exit handling
+    const {
+        isExitDialogOpen,
+        setIsExitDialogOpen,
+        handleReturn,
+        handleExitConfirm,
+        handleExitCancel,
+    } = useQuizExit({
+        isQuizActive: !isQuizFinished && quiz !== null,
+        onExitConfirm: () => navigate("/quiz"),
+    });
+
     if (!loading && !quiz) {
         return (
             <Navigate
@@ -81,14 +95,13 @@ const Quiz = () => {
         return <div>Loading quiz...</div>;
     }
 
-    const isFirstQuestion = currentQuestionIndex === 0;
-
-    const leftSection = (
+    const isFirstQuestion = currentQuestionIndex === 0;    const leftSection = (
         <>
             <QuizHeader
                 currentQuestionIndex={currentQuestionIndex}
                 totalQuestions={quiz.questions.length}
                 questionText={currentQuestion.question}
+                onReturn={handleReturn}
             />
         </>
     );
@@ -110,11 +123,18 @@ const Quiz = () => {
     );
 
     return (
-        <BackgroundLayout
-            leftSection={leftSection}
-            rightSection={rightSection}
-            isEven={false}
-        />
+        <>
+            <BackgroundLayout
+                leftSection={leftSection}
+                rightSection={rightSection}
+                isEven={false}
+            />
+            <QuizExitDialog
+                isOpen={isExitDialogOpen}
+                onClose={handleExitCancel}
+                onConfirm={handleExitConfirm}
+            />
+        </>
     );
 };
 
