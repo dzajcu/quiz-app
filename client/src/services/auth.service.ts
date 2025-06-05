@@ -1,4 +1,5 @@
 import api from "./api";
+import Cookies from "js-cookie";
 
 export interface RegisterData {
     username: string;
@@ -23,6 +24,8 @@ export interface AuthResponse {
     message: string;
 }
 
+export type NavigateCallback = (path: string) => void;
+
 const AuthService = {
     register: async (userData: RegisterData): Promise<AuthResponse> => {
         const response = await api.post("/users/register", userData);
@@ -33,14 +36,17 @@ const AuthService = {
         const response = await api.post("/users/login", userData);
         return response.data;
     },
+    logout: (navigate?: NavigateCallback): void => {
+        Cookies.remove("token");
+        Cookies.remove("user");
 
-    logout: (): void => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        if (navigate) {
+            navigate("/login");
+        }
     },
 
     getCurrentUser: () => {
-        const userStr = localStorage.getItem("user");
+        const userStr = Cookies.get("user");
         if (userStr) {
             return JSON.parse(userStr);
         }
@@ -48,8 +54,16 @@ const AuthService = {
     },
 
     saveAuthData: (data: AuthResponse): void => {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        Cookies.set("token", data.token, {
+            expires: 1,
+            secure: true,
+            sameSite: "strict",
+        });
+        Cookies.set("user", JSON.stringify(data.user), {
+            expires: 1,
+            secure: true,
+            sameSite: "strict",
+        });
     },
 };
 

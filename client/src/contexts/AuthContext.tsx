@@ -5,8 +5,10 @@ import React, {
     useEffect,
     ReactNode,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthService from "@/services/auth.service";
 import { RegisterData, LoginData } from "@/services/auth.service";
+import { setNavigator } from "@/services/api";
 
 interface User {
     id: string;
@@ -33,6 +35,11 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setNavigator(navigate);
+    }, [navigate]);
 
     useEffect(() => {
         const initAuth = async () => {
@@ -73,10 +80,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setIsLoading(false);
         }
     };
-
-    // Logout function
     const logout = () => {
-        AuthService.logout();
+        AuthService.logout(navigate);
         setUser(null);
     };
 

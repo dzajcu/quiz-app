@@ -95,7 +95,8 @@ const Quiz = () => {
         return <div>Loading quiz...</div>;
     }
 
-    const isFirstQuestion = currentQuestionIndex === 0;    const leftSection = (
+    const isFirstQuestion = currentQuestionIndex === 0;
+    const leftSection = (
         <>
             <QuizHeader
                 currentQuestionIndex={currentQuestionIndex}

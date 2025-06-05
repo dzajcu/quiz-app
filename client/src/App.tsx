@@ -13,119 +13,89 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/protected-route.tsx";
 
 const RootLayout = () => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-    return (
-        <ThemeProvider
-            defaultTheme={prefersDark ? "dark" : "light"}
-            storageKey="vite-ui-theme"
-        >
-            <AuthProvider>
-                <Toaster richColors />
-                <Outlet />
-            </AuthProvider>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider
+      defaultTheme={prefersDark ? "dark" : "light"}
+      storageKey="vite-ui-theme"
+    >
+      <AuthProvider>
+        <Toaster richColors />
+        <Outlet />
+      </AuthProvider>
+    </ThemeProvider>
+  );
 };
 
 const ProtectedLayout = () => (
-    <ProtectedRoute>
-        <Outlet />
-    </ProtectedRoute>
+  <ProtectedRoute>
+    <Outlet />
+  </ProtectedRoute>
 );
 
 const HomePage = () => (
-    <SidebarWrapper>
-        <AutoFillGrid>
-            <HomePageCard
-                title="Classic Quiz"
-                description="Test your knowledge with classic quiz format"
-                id="classic"
-            />
-            <HomePageCard
-                title="Time Attack"
-                description="Race against the clock to answer questions"
-                id="time"
-            />
-            <HomePageCard
-                title="Challenge Mode"
-                description="Complete increasingly difficult questions"
-                id="challenge"
-            />
-            <HomePageCard
-                title="Daily Quiz"
-                description="New questions every day"
-                id="daily"
-            />
-            <HomePageCard
-                title="Multiplayer"
-                description="Compete with other players in real-time"
-                id="multiplayer"
-            />
-            <HomePageCard
-                title="Multiplayer"
-                description="Compete with other players in real-time"
-                id="multiplayer"
-            />
-            <HomePageCard
-                title="Multiplayer"
-                description="Compete with other players in real-time"
-                id="multiplayer"
-            />
-        </AutoFillGrid>
-    </SidebarWrapper>
+  <SidebarWrapper>
+    <AutoFillGrid>
+      <HomePageCard
+        title="Classic Quiz"
+        description="Test your knowledge with classic quiz format"
+        id="classic"
+      />
+    </AutoFillGrid>
+  </SidebarWrapper>
 );
 
 const QuizLayout = () => (
-    <SidebarWrapper>
-        <Outlet />
-    </SidebarWrapper>
+  <SidebarWrapper>
+    <Outlet />
+  </SidebarWrapper>
 );
 
 const router = createBrowserRouter([
-    {
-        element: <RootLayout />,
+  {
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/login",
+        element: <LoginForm />,
+      },
+      {
+        path: "/register",
+        element: <RegisterForm />,
+      },
+      {
+        element: <ProtectedLayout />,
         children: [
-            {
-                path: "/",
-                element: <HomePage />,
-            },
-            {
-                path: "/login",
-                element: <LoginForm />,
-            },
-            {
-                path: "/register",
-                element: <RegisterForm />,
-            },
-            {
-                element: <ProtectedLayout />,
-                children: [
-                    {
-                        path: "/profile",
-                        element: <ProfilePage />,
-                    },
-                    {
-                        element: <QuizLayout />,
-                        children: [
-                            {
-                                path: "/quiz",
-                                element: <QuizMenu />,
-                            },
-                            {
-                                path: "/quiz/:quizId",
-                                element: <Quiz />,
-                            },
-                        ],
-                    },
-                ],
-            },
+          {
+            path: "/profile",
+            element: <ProfilePage />,
+          },
+          {
+            element: <QuizLayout />,
+            children: [
+              {
+                path: "/quiz",
+                element: <QuizMenu />,
+              },
+              {
+                path: "/quiz/:quizId",
+                element: <Quiz />,
+              },
+            ],
+          },
         ],
-    },
+      },
+    ],
+  },
 ]);
 
 function App() {
-    return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;
 }
 
 export default App;
