@@ -1,6 +1,7 @@
 import axios, { InternalAxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import AuthService from "./auth.service";
+import { toast } from "sonner";
 
 const API_URL = "http://localhost:8000/api/v1";
 
@@ -34,6 +35,7 @@ api.interceptors.response.use(
         if (error.response?.status === 401 && navigate) {
             AuthService.logout();
             navigate("/login");
+            toast.error("Session expired. Please log in again.");
         }
         return Promise.reject(error);
     }

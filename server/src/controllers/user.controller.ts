@@ -22,6 +22,7 @@ const isStrongPassword = (password: string): boolean => {
         hasSpecialChar
     );
 };
+const expiresIn = 14;
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -64,12 +65,13 @@ export const register = async (req: Request, res: Response) => {
         const token = jwt.sign(
             { userId: newUser._id, username: newUser.username, role: newUser.role },
             process.env.JWT_SECRET || "fallback_secret",
-            { expiresIn: "24h" }
+            { expiresIn: `${expiresIn * 24}h` }
         );
 
         res.status(201).json({
             message: "User registered successfully",
             token,
+            expiresIn: expiresIn,
             user: {
                 id: newUser._id,
                 username: newUser.username,
@@ -106,12 +108,13 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign(
             { userId: user._id, username: user.username, role: user.role },
             process.env.JWT_SECRET || "fallback_secret",
-            { expiresIn: "24h" }
+            { expiresIn: `${expiresIn * 24}h` }
         );
 
         res.status(200).json({
             message: "Login successful",
             token,
+            expiresIn: expiresIn,
             user: {
                 id: user._id,
                 username: user.username,

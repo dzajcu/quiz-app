@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "@/services/auth.service";
 import { RegisterData, LoginData } from "@/services/auth.service";
 import { setNavigator } from "@/services/api";
+import { toast } from "sonner";
 
 interface User {
     id: string;
@@ -40,24 +41,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     useEffect(() => {
         setNavigator(navigate);
     }, [navigate]);
-
     useEffect(() => {
         const initAuth = async () => {
             try {
-                const user = AuthService.getCurrentUser();
-                if (user) {
-                    setUser(user);
-                }
+                const user = await AuthService.getCurrentUser();
+                setUser(user);
             } catch (error) {
                 console.error("Failed to initialize auth:", error);
-                AuthService.logout();
+                AuthService.logout(navigate);
+                toast.error("Session expired. Please log in again.");
             } finally {
                 setIsLoading(false);
             }
         };
 
         initAuth();
-    }, []);
+    }, [navigate]);
 
     const login = async (userData: LoginData) => {
         setIsLoading(true);

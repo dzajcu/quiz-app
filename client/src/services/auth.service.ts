@@ -15,6 +15,7 @@ export interface LoginData {
 
 export interface AuthResponse {
     token: string;
+    expiresIn: number;
     user: {
         id: string;
         username: string;
@@ -38,29 +39,29 @@ const AuthService = {
     },
     logout: (navigate?: NavigateCallback): void => {
         Cookies.remove("token");
-        Cookies.remove("user");
 
         if (navigate) {
             navigate("/login");
         }
     },
-
-    getCurrentUser: () => {
-        const userStr = Cookies.get("user");
-        if (userStr) {
-            return JSON.parse(userStr);
+    getCurrentUser: async () => {
+        const token = Cookies.get("token");
+        if (!token) {
+            throw new Error("No token found");
         }
-        return null;
+
+        try {
+            const response = await api.get("/users/profile");
+            return response.data.user;
+        } catch (error) {
+            console.error("Error fetching current user:", error);
+            throw error;
+        }
     },
 
     saveAuthData: (data: AuthResponse): void => {
         Cookies.set("token", data.token, {
-            expires: 1,
-            secure: true,
-            sameSite: "strict",
-        });
-        Cookies.set("user", JSON.stringify(data.user), {
-            expires: 1,
+            expires: data.expiresIn,
             secure: true,
             sameSite: "strict",
         });
